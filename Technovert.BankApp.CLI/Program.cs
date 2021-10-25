@@ -4,6 +4,7 @@ using Technovert.BankApp.Services;
 using Technovert.BankApp.Models;
 using Technovert.BankApp.CLI.Controllers;
 using Technovert.BankApp.Models.Enums;
+using Technovert.BankApp.Models.Exceptions;
 
 namespace Technovert.BankApp.CLI
 {
@@ -14,6 +15,7 @@ namespace Technovert.BankApp.CLI
             int currentMenu = 0;
             string userBankId = "";
             string userAccountId = "";
+            string userPassword = "";
 
             Inputs inputs = new Inputs();
             DataStore datastore = new DataStore();
@@ -34,8 +36,16 @@ namespace Technovert.BankApp.CLI
                 {
                     Menu.BankMenu(datastore);
                     string b = inputs.GetBankId();
-                    userBankId = b;
-                    currentMenu++;
+                    try
+                    {
+                        bankService.GetBank(b);
+                        userBankId = b;
+                        currentMenu++;
+                    }
+                    catch (BankIdException)
+                    {
+                        Console.WriteLine("Bank does not exist");
+                    }
                 }
                 if (currentMenu == (int)Menus.LoginMenu)
                 {
@@ -43,14 +53,54 @@ namespace Technovert.BankApp.CLI
                     LoginOptions option = (LoginOptions)Enum.Parse(typeof(LoginOptions), Console.ReadLine());
                     switch (option)
                     {
-                        case LoginOptions.Create:
-                            userAccountId = accountsController.CreateAccount(userBankId);
-                            Console.WriteLine("Your account number is " + userAccountId);
+                        case LoginOptions.StaffLogin:
+                            try
+                            {
+                                userAccountId = inputs.GetAccountNumber();
+                                accountsController.GetAccount(userBankId, userAccountId);
+                                userPassword = inputs.GetPassword();
+                                accountService.ValidateStaff(userBankId, userAccountId, userPassword);
+                                currentMenu += 2;
+                            }
+                            catch(AccountNumberException)
+                            {
+                                Console.WriteLine("Invalid Account Number");
+                            }
+                            catch (Models.Exceptions.UnauthorizedAccessException)
+                            {
+                                Console.WriteLine("You are not Authorized to Access this Page");
+                            }
+                            catch (Models.Exceptions.PasswordIncorrectException)
+                            {
+                                Console.WriteLine("Password Entered is Incorrect");
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Something is Wrong");
+                            }               
                             break;
-                        case LoginOptions.Login:
-                            userAccountId = inputs.GetAccountNumber();
-                            string userPassword = inputs.GetPassword();
-                            currentMenu++;
+                        case LoginOptions.CustomerLogin:
+                            try
+                            {
+                                userAccountId = inputs.GetAccountNumber();
+                                accountsController.GetAccount(userBankId, userAccountId);
+                                userPassword = inputs.GetPassword();
+                                accountService.ValidateUser(userBankId, userAccountId, userPassword);
+                                currentMenu++;
+                            }
+                            catch (AccountNumberException)
+                            {
+                                Console.WriteLine("Invalid Account Number");
+                            }
+
+                            catch (Models.Exceptions.PasswordIncorrectException)
+                            {
+                                Console.WriteLine("Password Entered is Incorrect");
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Something is Wrong");
+                            }
                             break;
                         case LoginOptions.Back:
                             currentMenu--;
@@ -60,6 +110,7 @@ namespace Technovert.BankApp.CLI
                             break;
                     }
                 }
+               
                 if (currentMenu == (int)Menus.UserMenu)
                 {
                     Menu.UserMenu();
@@ -95,11 +146,74 @@ namespace Technovert.BankApp.CLI
                                 Console.WriteLine($" {t.TransactionId} | {t.SourceBankId}  |   {t.SourceAccountId}   |   {t.DestinationBankId}  |  {t.DestinationAccountId}   | {t.Amount.ToString()} | {t.On}");
                             }
                             break;
+                        case UserOptions.Back:
+                            currentMenu--;
+                            break;
                         case UserOptions.Exit:
-                            currentMenu = 0;
+                            Environment.Exit(0);
                             break;
                         default:
                             Console.WriteLine("Invalid");
+                            break;
+
+                    }
+
+                }
+
+
+                if (currentMenu == (int)Menus.StaffMenu)
+                {
+                    Menu.StaffMenu();
+                    StaffOptions option = (StaffOptions)Enum.Parse(typeof(StaffOptions), Console.ReadLine());
+                    decimal amount = 0m;
+                    switch (option)
+                    {
+                        case StaffOptions.CreateAccount:
+                            string newuserAccountId = accountsController.CreateAccount(userBankId);
+                            Console.WriteLine("New Account is Created  account number is " + newuserAccountId + " and your BankID is " + userBankId );
+                            break;
+                        case StaffOptions.UpdateAccount:
+                            Console.WriteLine("Not implemented");
+                            break;
+                        case StaffOptions.DeleteAccount:
+                            Console.WriteLine("Not implemented");
+                            break;
+                        case StaffOptions.ShowAccountTransactionHistory:
+                            userAccountId = inputs.GetAccountNumber();
+                            List<Transaction> hist = accountsController.GetTransactionHistory(userBankId, userAccountId);
+
+                            Console.WriteLine("TransactionId | Source Bank | Source Account | Dest. Bank | Dest Account |  Amount  | Timestamp ");
+                            Console.WriteLine("-----------------------------------------------------------------------------------------------------------");
+                            foreach (Transaction t in hist)
+                            {
+                                Console.WriteLine(t.ToString());
+                            }
+                            break;
+
+                        case StaffOptions.ShowBankTransactionHistory:
+                            Console.WriteLine("Not Implemented");
+                            break;
+                        case StaffOptions.UpdateServiceChargesForSameBank:
+                            Console.WriteLine("Not Implemented");
+                            break;
+                        case StaffOptions.UpdateServiceChargesForOtherBanks:
+                            Console.WriteLine("Not Implemented");
+                            break;
+                        case StaffOptions.AddNewCurrency:
+                            Console.WriteLine("Not Implemented");
+                            break;
+                        case StaffOptions.RevertTransaction:
+                            Console.WriteLine("Not Implemented");
+                            break;
+                        case StaffOptions.Back:
+                            currentMenu--;
+                            currentMenu--;
+                            break;
+                        case StaffOptions.Exit:
+                            Environment.Exit(0);
+                            break;
+                        default:
+                            Console.WriteLine("Invalid Option");
                             break;
 
                     }

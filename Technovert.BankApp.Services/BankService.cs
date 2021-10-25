@@ -28,6 +28,17 @@ namespace Technovert.BankApp.Services
             {
                 throw new Exception("Bank Exists with this name!");
             }
+            Account manager = new Account
+            {
+                AccountId = "ADMIN",
+                Name = "ADMIN",
+                Password = "ADMIN",
+                Balance = 0m,
+                Gender = Models.Enums.Gender.Male,
+                Status = Models.Enums.Status.Active,
+                Type = Models.Enums.AccountType.BankStaff,
+                Transactions = new List<Transaction>()
+            };
             Bank bank = new Bank
             {
                 BankId = GenerateBankId(name),
@@ -44,12 +55,18 @@ namespace Technovert.BankApp.Services
                 IMPSToOther = 0.06m
             };
             dataStore.Banks.Add(bank);
+            bank.Accounts.Add(manager);
             return bank.BankId;
         }
         public Bank GetBank(string bankId)
         {
 
-            return dataStore.Banks.SingleOrDefault(b => b.BankId == bankId);
+            Bank b = dataStore.Banks.SingleOrDefault(b => b.BankId == bankId);
+            if (b == null)
+            {
+                throw new BankIdException();
+            }
+            return b;
         }
         public void UpdateServiceChargesForSameBank(string bankId, decimal RTGS, decimal IMPS)
         {

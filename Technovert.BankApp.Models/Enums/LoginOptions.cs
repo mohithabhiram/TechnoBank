@@ -8,8 +8,8 @@ namespace Technovert.BankApp.Models.Enums
 {
     public enum LoginOptions
     {
-        Create = 1,
-        Login,
+        StaffLogin = 1,
+        CustomerLogin,
         Back,
         Exit
     }

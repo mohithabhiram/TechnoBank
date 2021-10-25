@@ -40,8 +40,6 @@ namespace Technovert.BankApp.Services
             return name.Substring(0, 3) + date;
         }
 
-
-
         public Account GetAccount(string bankId, string accountId)
         {
             return bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
@@ -52,6 +50,28 @@ namespace Technovert.BankApp.Services
             Account acc = GetAccount(bankId, accountId);
             acc.Balance = balance;
 
+        }
+        public bool ValidateUser(string bankId, string accountId, string password)
+        {
+            Account acc = GetAccount(bankId, accountId);
+            if (acc.Password != password)
+            {
+                throw new PasswordIncorrectException();
+            }
+            return true;
+        }
+        public bool ValidateStaff(string bankId, string accountId, string password)
+        {
+            Account acc = GetAccount(bankId, accountId);
+            if (acc.Type != AccountType.BankStaff)
+            {
+                throw new Models.Exceptions.UnauthorizedAccessException();
+            }
+            if (acc.Password != password)
+            {
+                throw new PasswordIncorrectException();
+            }
+            return true;
         }
 
     }

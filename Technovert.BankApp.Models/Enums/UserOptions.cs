@@ -13,6 +13,7 @@ namespace Technovert.BankApp.Models.Enums
         Transfer,
         ShowBalance,
         TransactionHistory,
+        Back,
         Exit
     }
 }

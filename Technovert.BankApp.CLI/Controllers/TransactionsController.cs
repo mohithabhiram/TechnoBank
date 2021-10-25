@@ -25,7 +25,7 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
-                id = transactionService.AddTransaction(bankId, accountId, "", "", amount, TransactionType.Withdraw, TransactionMode.Standard);
+                id = transactionService.AddTransaction(bankId, accountId, "USER", "USER", amount, TransactionType.Withdraw, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
@@ -44,7 +44,7 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
-                id = transactionService.AddTransaction("", "", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
+                id = transactionService.AddTransaction("USER", "USER", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
             }
             catch (BalanceException)
             {

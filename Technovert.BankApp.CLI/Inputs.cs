@@ -11,23 +11,25 @@ namespace Technovert.BankApp.CLI
     {
         public string GetAccountNumber()
         {
+            
             Console.WriteLine("Please Enter Your Account Number :");
             return (Console.ReadLine());
         }
         public string GetPassword()
         {
-            Console.WriteLine("Please Enter Your Password :");
+            Console.WriteLine("Enter Password :");
             return Console.ReadLine();
         }
         public string GetName()
         {
-            Console.WriteLine("Please Enter Your Name :");
+            Console.WriteLine("Enter Name :");
             return Console.ReadLine();
         }
         public string GetBankId()
         {
             Console.WriteLine("Please Enter Your Selection :");
-            return Console.ReadLine();
+            string bankId = Console.ReadLine();
+            return bankId;
         }
         public Gender GetGender()
         {

@@ -44,26 +44,22 @@ namespace Technovert.BankApp.CLI.Controllers
         }
         public Account GetAccount(string bankId, string accountId)
         {
-
-            try
-            {
                 Account acc = accountService.GetAccount(bankId, accountId);
                 if (acc == null)
                 {
                     throw new AccountNumberException();
                 }
                 return acc;
-            }
-            catch (AccountNumberException e)
-            {
+            
+            //catch (AccountNumberException e)
+            //{
 
-                Console.WriteLine("Account  doesnot  exist.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Internal Error");
-            }
-            return null;
+            //    Console.WriteLine("Account  does not  exist.");
+            //}
+            //catch (Exception e)
+            //{
+            //    Console.WriteLine("Internal Error");
+            //}
         }
         public decimal GetBalance(string bankId, string accountId)
         {

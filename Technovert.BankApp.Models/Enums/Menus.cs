@@ -10,6 +10,7 @@ namespace Technovert.BankApp.Models.Enums
     {
         BankMenu,
         LoginMenu,
-        UserMenu
+        UserMenu,
+        StaffMenu
     }
 }
