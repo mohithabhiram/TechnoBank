@@ -9,7 +9,6 @@ namespace Technovert.BankApp.Models.Enums
     public enum StaffOptions
     {
         CreateAccount = 1,
-        GetAccountDetails,
         UpdateAccount,
         DeleteAccount,
         UpdateServiceChargesForSameBank,

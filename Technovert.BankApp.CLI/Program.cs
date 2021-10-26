@@ -194,9 +194,11 @@ namespace Technovert.BankApp.CLI
                             Console.WriteLine("Not Implemented");
                             break;
                         case StaffOptions.UpdateServiceChargesForSameBank:
+                            banksController.UpdateServiceChargesForSameBank(userBankId);
                             Console.WriteLine("Not Implemented");
                             break;
                         case StaffOptions.UpdateServiceChargesForOtherBanks:
+                            banksController.UpdateServiceChargesForOtherBanks(userBankId);
                             Console.WriteLine("Not Implemented");
                             break;
                         case StaffOptions.AddNewCurrency:

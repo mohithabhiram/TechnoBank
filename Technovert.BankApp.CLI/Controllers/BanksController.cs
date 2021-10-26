@@ -50,23 +50,27 @@ namespace Technovert.BankApp.CLI.Controllers
             try
             {
                 Bank b = bankService.GetBank(bankId);
-                //if (b == null)
-                //{
-                //    throw new BankIdException();
-                //}
                 return b;
             }
-            //catch (BankIdException e)
-            //{
-
-            //    Console.WriteLine("Bank does not exist.");
-            //}
             catch (Exception e)
             {
                 Console.WriteLine("Internal Error");
             }
             return null;
         }
+        public void UpdateServiceChargesForSameBank(string userBankId)
+        {
+            decimal imps = inputs.GetImps();
+            decimal rtgs = inputs.GetRtgs();
+            bankService.UpdateServiceChargesForSameBank(rtgs, imps, userBankId);
+        }
+        public void UpdateServiceChargesForOtherBanks(string userBankId)
+        {
+            decimal imps = inputs.GetImps();
+            decimal rtgs = inputs.GetRtgs();
+            bankService.UpdateServiceChargesForOtherBanks(rtgs, imps, userBankId);
+        }
+
     }
 }
 

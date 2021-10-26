@@ -68,14 +68,14 @@ namespace Technovert.BankApp.Services
             }
             return b;
         }
-        public void UpdateServiceChargesForSameBank(string bankId, decimal RTGS, decimal IMPS)
+        public void UpdateServiceChargesForSameBank(decimal RTGS, decimal IMPS, string bankId)
         {
             Bank bank = GetBank(bankId);
             bank.RTGSToSame = RTGS;
             bank.IMPSToSame = IMPS;
 
         }
-        public void UpdateServiceChargesForOtherBanks(string bankId, decimal RTGS, decimal IMPS)
+        public void UpdateServiceChargesForOtherBanks(decimal RTGS, decimal IMPS, string bankId)
         {
             Bank bank = GetBank(bankId);
             bank.RTGSToOther = RTGS;
@@ -92,6 +92,7 @@ namespace Technovert.BankApp.Services
             };
             bank.Currencies.Add(currency);
         }
+       
 
 
 

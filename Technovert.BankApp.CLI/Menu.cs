@@ -44,27 +44,28 @@ namespace Technovert.BankApp.CLI
             Console.WriteLine("3.Transfer");
             Console.WriteLine("4.Show Balance");
             Console.WriteLine("5.Show Transaction History");
+            Console.WriteLine("6.Back");
+            Console.WriteLine("7.Exit");
         }
 
 
         public static void StaffMenu()
         {
             Console.WriteLine("STAFF MENU:   ");
-            Console.WriteLine("Choose and Enter tHe option below");
+            Console.WriteLine("Choose and Enter the option below");
             Console.WriteLine("Option | Description");
             Console.WriteLine("----------------------------------");
             Console.WriteLine("   1   | CreateAccount");
-            Console.WriteLine("   2   | Get Account Details");
-            Console.WriteLine("   3   | UpdateAcount");
-            Console.WriteLine("   4   | DeleteAccount");
-            Console.WriteLine("   5   | UpdateServiceChargesForSameBank");
-            Console.WriteLine("   6   | UpdateServiceChargesForOtherBanks");
-            Console.WriteLine("   7   | ShowAccountTransactionHistory");
-            Console.WriteLine("   8   | ShowBankTransactionHistory");
-            Console.WriteLine("   9   | RevertTransaction");
-            Console.WriteLine("  10   | AddNewCurrency");
-            Console.WriteLine("  11   | Back");
-            Console.WriteLine("  12   | Exit");
+            Console.WriteLine("   2   | UpdateAcount");
+            Console.WriteLine("   3   | DeleteAccount");
+            Console.WriteLine("   4   | UpdateServiceChargesForSameBank");
+            Console.WriteLine("   5   | UpdateServiceChargesForOtherBanks");
+            Console.WriteLine("   6   | ShowAccountTransactionHistory");
+            Console.WriteLine("   7   | ShowBankTransactionHistory");
+            Console.WriteLine("   8   | RevertTransaction");
+            Console.WriteLine("   9   | AddNewCurrency");
+            Console.WriteLine("  10   | Back");
+            Console.WriteLine("  11   | Exit");
             Console.WriteLine("----------------------------------");
         }
     }

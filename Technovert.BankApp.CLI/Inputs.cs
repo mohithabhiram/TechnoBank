@@ -23,7 +23,14 @@ namespace Technovert.BankApp.CLI
         public string GetName()
         {
             Console.WriteLine("Enter Name :");
-            return Console.ReadLine();
+            string name = Console.ReadLine();
+            while(!name.All(Char.IsLetter))
+            {
+                Console.WriteLine("Name should contain only letters");
+                Console.WriteLine("Enter Name :");
+                name = Console.ReadLine();
+            }
+            return name;
         }
         public string GetBankId()
         {
@@ -56,6 +63,16 @@ namespace Technovert.BankApp.CLI
         {
             Console.WriteLine("Please Enter The Amount :");
             return Convert.ToDecimal(Console.ReadLine());
+        }
+        public decimal GetRtgs()
+        {
+            Console.WriteLine("Set RTGS value :");
+            return Convert.ToDecimal(Console.ReadLine())/100;
+        }
+        public decimal GetImps()
+        {
+            Console.WriteLine("Set IMPS value :");
+            return Convert.ToDecimal(Console.ReadLine())/100;
         }
         public List<string> GetRecipient()
         {

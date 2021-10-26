@@ -8,8 +8,8 @@ namespace Technovert.BankApp.Models.Enums
 {
     public enum TransactionMode
     {
-        Standard=1,
-        RTGS,
-        IMPS
+        RTGS=1,
+        IMPS,
+        Standard
     }
 }
