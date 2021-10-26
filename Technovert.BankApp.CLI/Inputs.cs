@@ -18,15 +18,22 @@ namespace Technovert.BankApp.CLI
         public string GetPassword()
         {
             Console.WriteLine("Enter Password :");
-            return Console.ReadLine();
+            string password = Console.ReadLine();
+            while (password.Length < 3)
+            {
+                Console.WriteLine("Password should have a length of minimum 4 characters");
+                Console.WriteLine("Enter Password :");
+                password = Console.ReadLine();
+            }
+            return password;
         }
         public string GetName()
         {
             Console.WriteLine("Enter Name :");
             string name = Console.ReadLine();
-            while(!name.All(Char.IsLetter))
+            while((!name.All(Char.IsLetter)) || name.Length<3)
             {
-                Console.WriteLine("Name should contain only letters");
+                Console.WriteLine("Name should contain only letters and should have a length of minimum 3 characters");
                 Console.WriteLine("Enter Name :");
                 name = Console.ReadLine();
             }

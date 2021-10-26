@@ -119,8 +119,7 @@ namespace Technovert.BankApp.CLI
                     switch (option)
                     {
                         case UserOptions.Deposit:
-                            amount = inputs.GetAmount();
-                            transactionsController.Deposit(userBankId, userAccountId, amount);
+                            transactionsController.Deposit(userBankId, userAccountId, datastore);
                             break;
                         case UserOptions.Withdraw:
                             amount = inputs.GetAmount();
@@ -173,10 +172,10 @@ namespace Technovert.BankApp.CLI
                             Console.WriteLine("New Account is Created  account number is " + newuserAccountId + " and your BankID is " + userBankId );
                             break;
                         case StaffOptions.UpdateAccount:
-                            Console.WriteLine("Not implemented");
+                            throw new ImplementationException("Not implemented");
                             break;
                         case StaffOptions.DeleteAccount:
-                            Console.WriteLine("Not implemented");
+                            throw new ImplementationException("Not implemented");
                             break;
                         case StaffOptions.ShowAccountTransactionHistory:
                             userAccountId = inputs.GetAccountNumber();
@@ -189,23 +188,24 @@ namespace Technovert.BankApp.CLI
                                 Console.WriteLine(t.ToString());
                             }
                             break;
-
-                        case StaffOptions.ShowBankTransactionHistory:
-                            Console.WriteLine("Not Implemented");
-                            break;
                         case StaffOptions.UpdateServiceChargesForSameBank:
                             banksController.UpdateServiceChargesForSameBank(userBankId);
-                            Console.WriteLine("Not Implemented");
                             break;
                         case StaffOptions.UpdateServiceChargesForOtherBanks:
                             banksController.UpdateServiceChargesForOtherBanks(userBankId);
-                            Console.WriteLine("Not Implemented");
                             break;
                         case StaffOptions.AddNewCurrency:
-                            Console.WriteLine("Not Implemented");
+                            Console.WriteLine("List of currencies:");
+                            foreach (Currency currency in datastore.Currencies)
+                            {
+                                Console.WriteLine(currency.Code + "-->" + currency.Name);
+                            }
+                            Console.WriteLine("Choose a currency to add\nEnter currency code:");
+                            string currencyCode = Console.ReadLine();
+                            banksController.AddNewCurrency(userBankId,currencyCode);
                             break;
                         case StaffOptions.RevertTransaction:
-                            Console.WriteLine("Not Implemented");
+                            throw new ImplementationException("Not implemented");
                             break;
                         case StaffOptions.Back:
                             currentMenu--;

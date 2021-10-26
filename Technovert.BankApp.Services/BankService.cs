@@ -30,9 +30,9 @@ namespace Technovert.BankApp.Services
             }
             Account manager = new Account
             {
-                AccountId = "ADMIN",
-                Name = "ADMIN",
-                Password = "ADMIN",
+                AccountId = BankConstants.StaffName,
+                Name = BankConstants.StaffName,
+                Password = BankConstants.StaffName,
                 Balance = 0m,
                 Gender = Models.Enums.Gender.Male,
                 Status = Models.Enums.Status.Active,
@@ -49,13 +49,15 @@ namespace Technovert.BankApp.Services
                 UpdatedOn = DateTime.Now,
                 Accounts = new List<Account>(),
                 Currencies = new List<Currency>(),
+                DefaultCurrency = dataStore.Currencies.SingleOrDefault(c => c.Code == "INR"),
                 RTGSToSame = 0m,
                 IMPSToSame = 0.05m,
                 RTGSToOther = 0.02m,
                 IMPSToOther = 0.06m
             };
-            dataStore.Banks.Add(bank);
+            bank.Currencies.Add(dataStore.Currencies.SingleOrDefault(c => c.Code == "INR"));
             bank.Accounts.Add(manager);
+            dataStore.Banks.Add(bank);
             return bank.BankId;
         }
         public Bank GetBank(string bankId)
@@ -64,7 +66,7 @@ namespace Technovert.BankApp.Services
             Bank b = dataStore.Banks.SingleOrDefault(b => b.BankId == bankId);
             if (b == null)
             {
-                throw new BankIdException();
+                throw new BankIdException("Bank does not exist" );
             }
             return b;
         }
@@ -81,20 +83,17 @@ namespace Technovert.BankApp.Services
             bank.RTGSToOther = RTGS;
             bank.IMPSToOther = IMPS;
         }
-        public void AddCurrency(string bankId, string name, String code, decimal exchangeRate)
+        public void AddNewCurrency(string bankId,String code)
         {
             Bank bank = GetBank(bankId);
             Currency currency = new Currency
             {
-                Name = name,
+                Name = dataStore.Currencies.SingleOrDefault(c => c.Code == code).Name,
                 Code = code,
-                ExchangeRate = exchangeRate,
+                ExchangeRate = dataStore.Currencies.SingleOrDefault(c => c.Code == code).ExchangeRate,
             };
             bank.Currencies.Add(currency);
         }
-       
-
-
 
     }
 }

@@ -56,7 +56,7 @@ namespace Technovert.BankApp.Services
             Account acc = GetAccount(bankId, accountId);
             if (acc.Password != password)
             {
-                throw new PasswordIncorrectException();
+                throw new PasswordIncorrectException("Password Entered is Incorrect");
             }
             return true;
         }
@@ -65,11 +65,11 @@ namespace Technovert.BankApp.Services
             Account acc = GetAccount(bankId, accountId);
             if (acc.Type != AccountType.BankStaff)
             {
-                throw new Models.Exceptions.UnauthorizedAccessException();
+                throw new Models.Exceptions.UnauthorizedAccessException("You are not Authorized to Access this Page");
             }
             if (acc.Password != password)
             {
-                throw new PasswordIncorrectException();
+                throw new PasswordIncorrectException("Password Entered is Incorrect");
             }
             return true;
         }

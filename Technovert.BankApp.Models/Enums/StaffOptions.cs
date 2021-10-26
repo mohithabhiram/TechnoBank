@@ -8,13 +8,12 @@ namespace Technovert.BankApp.Models.Enums
 {
     public enum StaffOptions
     {
-        CreateAccount = 1,
+        CreateAccount=1,
         UpdateAccount,
         DeleteAccount,
         UpdateServiceChargesForSameBank,
         UpdateServiceChargesForOtherBanks,
         ShowAccountTransactionHistory,
-        ShowBankTransactionHistory,
         RevertTransaction,
         AddNewCurrency,
         Back,

@@ -8,5 +8,9 @@ namespace Technovert.BankApp.Models.Exceptions
 {
     public class BankIdException : Exception
     {
+        public BankIdException(string message) : base(message)
+        {
+
+        }
     }
 }

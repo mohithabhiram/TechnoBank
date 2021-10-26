@@ -38,9 +38,18 @@ namespace Technovert.BankApp.CLI.Controllers
             }
             return id;
         }
-        public string Deposit(string bankId, string accountId, decimal amount)
+        public string Deposit(string bankId, string accountId, DataStore dataStore)
         {
-
+            Console.WriteLine("List of currencies accepted by the bank");
+            foreach (Currency currency in dataStore.Currencies)
+            {
+                Console.WriteLine(currency.Code+"-->"+currency.Name);
+            }
+            Console.WriteLine("Enter currency code");
+            string currencyCode = Console.ReadLine();
+            Console.WriteLine("Enter amount to deposit:");
+            decimal amount = Convert.ToDecimal(Console.ReadLine());
+            amount = transactionService.ConvertToDefaultCurrency(currencyCode, amount, bankId);
             string id = "";
             try
             {

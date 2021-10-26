@@ -110,6 +110,15 @@ namespace Technovert.BankApp.Services
             //for withdraw and transfer
             return "TXN"+sourceBankId+sourceAccountId+date;
         }
+        public decimal ConvertToDefaultCurrency(string currencyCode, decimal amount, string bankId)
+        {
+            if(currencyCode!="INR")
+            {
+                Currency currency = bankService.GetBank(bankId).Currencies.SingleOrDefault(c => c.Code == currencyCode);
+                return amount * currency.ExchangeRate;
+            }
+            return amount;
+        }
 
 
         public Transaction GetTransaction(string bankId, string accountId, string TransactionId)

@@ -61,11 +61,10 @@ namespace Technovert.BankApp.CLI
             Console.WriteLine("   4   | UpdateServiceChargesForSameBank");
             Console.WriteLine("   5   | UpdateServiceChargesForOtherBanks");
             Console.WriteLine("   6   | ShowAccountTransactionHistory");
-            Console.WriteLine("   7   | ShowBankTransactionHistory");
-            Console.WriteLine("   8   | RevertTransaction");
-            Console.WriteLine("   9   | AddNewCurrency");
-            Console.WriteLine("  10   | Back");
-            Console.WriteLine("  11   | Exit");
+            Console.WriteLine("   7   | RevertTransaction");
+            Console.WriteLine("   8   | AddNewCurrency");
+            Console.WriteLine("   9   | Back");
+            Console.WriteLine("  10   | Exit");
             Console.WriteLine("----------------------------------");
         }
     }

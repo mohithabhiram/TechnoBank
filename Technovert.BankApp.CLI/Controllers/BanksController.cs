@@ -31,11 +31,11 @@ namespace Technovert.BankApp.CLI.Controllers
                 return id;
 
             }
-            //catch (BankIdException e)
-            //{
+            catch (BankIdException e)
+            {
 
-            //    Console.WriteLine("Bank already exists.");
-            //}
+                Console.WriteLine("Bank already exists.");
+            }
             catch (Exception e)
             {
                 Console.WriteLine("Internal Error");
@@ -69,6 +69,19 @@ namespace Technovert.BankApp.CLI.Controllers
             decimal imps = inputs.GetImps();
             decimal rtgs = inputs.GetRtgs();
             bankService.UpdateServiceChargesForOtherBanks(rtgs, imps, userBankId);
+        }
+        public void AddNewCurrency(string bankId, string currencyCode)
+        {
+            if(bankService.GetBank(bankId).Currencies.SingleOrDefault(c => c.Code == currencyCode)==null)
+            {
+                bankService.AddNewCurrency(bankId, currencyCode); 
+            }
+            else
+            {
+                Console.WriteLine("Currency already exists:");
+                return;
+            }
+           
         }
 
     }

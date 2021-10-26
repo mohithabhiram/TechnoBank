@@ -8,5 +8,9 @@ namespace Technovert.BankApp.Models.Exceptions
 {
     public class PasswordIncorrectException : Exception
     {
+        public PasswordIncorrectException(string message) : base(message)
+        {
+
+        }
     }
 }
