@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models.Enums;
+using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.Exceptions;
 
 namespace Technovert.BankApp.CLI
 {
@@ -81,14 +83,19 @@ namespace Technovert.BankApp.CLI
             Console.WriteLine("Set IMPS value :");
             return Convert.ToDecimal(Console.ReadLine())/100;
         }
-        public List<string> GetRecipient()
+        public List<string> GetRecipient(Controllers.BanksController banksController)
         {
             List<string> res = new List<string>();
             Console.WriteLine("Please Enter Recipient BankId");
             string recipBankId = Console.ReadLine();
+            if (banksController.GetBank(recipBankId) == null)
+                throw new BankIdException("Bank does not exist");
             res.Add(recipBankId);
             Console.WriteLine("Please Enter Recipient Account number");
-            res.Add((Console.ReadLine()));
+            string recipAccountId = Console.ReadLine();
+            if (banksController.GetBank(recipBankId).Accounts.SingleOrDefault(a => a.AccountId == recipBankId) == null)
+                throw new AccountNumberException("Account does not exist");
+            res.Add(recipAccountId);
             return res;
         }
         public TransactionMode GetTransactionMode()

@@ -42,9 +42,9 @@ namespace Technovert.BankApp.CLI
                         userBankId = b;
                         currentMenu++;
                     }
-                    catch (BankIdException)
+                    catch (BankIdException e)
                     {
-                        Console.WriteLine("Bank does not exist");
+                        Console.WriteLine(e.Message);
                     }
                 }
                 if (currentMenu == (int)Menus.LoginMenu)
@@ -62,9 +62,9 @@ namespace Technovert.BankApp.CLI
                                 accountService.ValidateStaff(userBankId, userAccountId, userPassword);
                                 currentMenu += 2;
                             }
-                            catch(AccountNumberException)
+                            catch(AccountNumberException e)
                             {
-                                Console.WriteLine("Invalid Account Number");
+                                Console.WriteLine(e.Message);
                             }
                             catch (Models.Exceptions.UnauthorizedAccessException)
                             {
@@ -88,18 +88,18 @@ namespace Technovert.BankApp.CLI
                                 accountService.ValidateUser(userBankId, userAccountId, userPassword);
                                 currentMenu++;
                             }
-                            catch (AccountNumberException)
+                            catch (AccountNumberException e)
                             {
-                                Console.WriteLine("Invalid Account Number");
+                                Console.WriteLine(e.Message);
                             }
 
-                            catch (Models.Exceptions.PasswordIncorrectException)
+                            catch (PasswordIncorrectException e)
                             {
-                                Console.WriteLine("Password Entered is Incorrect");
+                                Console.WriteLine(e.Message);
                             }
                             catch (Exception)
                             {
-                                Console.WriteLine("Something is Wrong");
+                                Console.WriteLine("Internal Error");
                             }
                             break;
                         case LoginOptions.Back:
@@ -126,10 +126,21 @@ namespace Technovert.BankApp.CLI
                             transactionsController.Withdraw(userBankId, userAccountId, amount);
                             break;
                         case UserOptions.Transfer:
-                            List<string> recp = inputs.GetRecipient();
-                            amount = inputs.GetAmount();
-                            TransactionMode transactionMode = inputs.GetTransactionMode();
-                            transactionsController.Transfer(userBankId, userAccountId, recp[0], recp[1], amount, transactionMode);
+                            try
+                            {
+                                List<string> recp = inputs.GetRecipient(banksController);
+                                amount = inputs.GetAmount();
+                                TransactionMode transactionMode = inputs.GetTransactionMode();
+                                transactionsController.Transfer(userBankId, userAccountId, recp[0], recp[1], amount, transactionMode);
+                            }
+                            catch (BankIdException e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
+                            catch (AccountNumberException e)
+                            {
+                                Console.WriteLine(e.Message);
+                            }
                             break;
                         case UserOptions.ShowBalance:
                             {

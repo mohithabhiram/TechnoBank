@@ -51,6 +51,10 @@ namespace Technovert.BankApp.Services
             acc.Balance = balance;
 
         }
+        public decimal GetBalance(string bankId,string accountId)
+        {
+            return GetAccount(bankId, accountId).Balance;
+        }
         public bool ValidateUser(string bankId, string accountId, string password)
         {
             Account acc = GetAccount(bankId, accountId);

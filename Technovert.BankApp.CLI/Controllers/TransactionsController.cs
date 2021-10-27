@@ -11,6 +11,7 @@ using Technovert.BankApp.Models.Enums;
 namespace Technovert.BankApp.CLI.Controllers
 {
     class TransactionsController
+
     {
         private TransactionService transactionService;
         private AccountService accountService;
@@ -25,11 +26,15 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
+                if(amount<0 || amount>accountService.GetBalance(bankId,accountId))
+                {
+                    throw new BalanceException("Insufficient Balance or Invalid Amount");
+                }
                 id = transactionService.AddTransaction(bankId, accountId, "USER", "USER", amount, TransactionType.Withdraw, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Insufficient Balance or InvalidAmount");
             }
             catch (Exception)
             {
@@ -53,11 +58,16 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
+                if(amount<0)
+                {
+                    throw new BalanceException("Invalid Amount");
+                }
+
                 id = transactionService.AddTransaction("USER", "USER", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Invalid Amount");
             }
             catch (Exception)
             {
@@ -71,11 +81,15 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
+                if (amount < 0 || amount > accountService.GetBalance(sourceBankId, sourceAccountId))
+                {
+                    throw new BalanceException("Insufficient Balance or Invalid Amount");
+                }
                 id = transactionService.AddTransaction(sourceBankId, sourceAccountId, destinationBankId, destinationAccountId, amount, TransactionType.Transfer, transactionMode);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Insufficient Balance or Invalid Amount");
             }
             catch (Exception)
             {
