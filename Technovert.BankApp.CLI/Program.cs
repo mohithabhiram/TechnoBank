@@ -26,7 +26,7 @@ namespace Technovert.BankApp.CLI
 
             BanksController banksController = new BanksController(bankService, inputs);
             AccountsController accountsController = new AccountsController(accountService, inputs);
-            TransactionsController transactionsController = new TransactionsController(transactionService, accountService);
+            TransactionsController transactionsController = new TransactionsController(transactionService, accountService, bankService);
 
             Utilities.CreateBank.CustomBanks(banksController);
 
@@ -34,17 +34,29 @@ namespace Technovert.BankApp.CLI
             {
                 if (currentMenu == (int)Menus.BankMenu)
                 {
+                    Console.WriteLine("Existing Banks:\n-------------------------");
                     Menu.BankMenu(datastore);
-                    string b = inputs.GetBankId();
-                    try
+                    Console.WriteLine("1.Choose Your Bank:\n2.Add a new Bank:");
+                    int option = Convert.ToInt32(Console.ReadLine());
+                    if (option == 2)
                     {
-                        bankService.GetBank(b);
-                        userBankId = b;
-                        currentMenu++;
+                        Console.WriteLine("Enter Bank Name:");
+                        string bankName = Console.ReadLine();
+                        banksController.CreateBank(bankName);
                     }
-                    catch (BankIdException e)
+                    else
                     {
-                        Console.WriteLine(e.Message);
+                        string b = inputs.GetBankId();
+                        try
+                        {
+                            bankService.GetBank(b);
+                            userBankId = b;
+                            currentMenu++;
+                        }
+                        catch (BankIdException e)
+                        {
+                            Console.WriteLine(e.Message);
+                        }
                     }
                 }
                 if (currentMenu == (int)Menus.LoginMenu)
@@ -119,7 +131,7 @@ namespace Technovert.BankApp.CLI
                     switch (option)
                     {
                         case UserOptions.Deposit:
-                            transactionsController.Deposit(userBankId, userAccountId, datastore);
+                            transactionsController.Deposit(userBankId, userAccountId);
                             break;
                         case UserOptions.Withdraw:
                             amount = inputs.GetAmount();

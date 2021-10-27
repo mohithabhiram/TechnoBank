@@ -12,11 +12,11 @@ namespace Technovert.BankApp.CLI
     {
         public static void BankMenu(DataStore datastore)
         {
-            Console.WriteLine("Choose Your Bank");
             foreach (Bank bank in datastore.Banks)
             {
                 Console.WriteLine(bank.BankId + " | " + bank.Name);
             }
+            Console.WriteLine("-------------------------");
         }
         public static void UserLoginMenu()
         {

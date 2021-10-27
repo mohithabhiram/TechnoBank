@@ -15,11 +15,13 @@ namespace Technovert.BankApp.CLI.Controllers
     {
         private TransactionService transactionService;
         private AccountService accountService;
+        private BankService bankService;
 
-        public TransactionsController(TransactionService transactionService, AccountService accountService)
+        public TransactionsController(TransactionService transactionService, AccountService accountService, BankService bankService)
         {
             this.transactionService = transactionService;
             this.accountService = accountService;
+            this.bankService = bankService;
         }
         public string Withdraw(string bankId, string accountId, decimal amount)
         {
@@ -43,10 +45,10 @@ namespace Technovert.BankApp.CLI.Controllers
             }
             return id;
         }
-        public string Deposit(string bankId, string accountId, DataStore dataStore)
+        public string Deposit(string bankId, string accountId)
         {
             Console.WriteLine("List of currencies accepted by the bank");
-            foreach (Currency currency in dataStore.Currencies)
+            foreach (Currency currency in bankService.GetBank(bankId).Currencies)
             {
                 Console.WriteLine(currency.Code+"-->"+currency.Name);
             }
