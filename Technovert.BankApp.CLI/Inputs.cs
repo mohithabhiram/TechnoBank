@@ -14,7 +14,7 @@ namespace Technovert.BankApp.CLI
         public string GetAccountNumber()
         {
             
-            Console.WriteLine("Please Enter Your Account Number :");
+            Console.WriteLine("Please Enter the Account Number :");
             return (Console.ReadLine());
         }
         public string GetPassword()

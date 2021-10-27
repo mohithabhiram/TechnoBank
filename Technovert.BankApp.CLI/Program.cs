@@ -44,7 +44,7 @@ namespace Technovert.BankApp.CLI
                         string bankName = Console.ReadLine();
                         banksController.CreateBank(bankName);
                     }
-                    else
+                    else if (option == 1)
                     {
                         string b = inputs.GetBankId();
                         try
@@ -58,6 +58,8 @@ namespace Technovert.BankApp.CLI
                             Console.WriteLine(e.Message);
                         }
                     }
+                    else
+                        Console.WriteLine("Invalid Option");
                 }
                 if (currentMenu == (int)Menus.LoginMenu)
                 {
@@ -198,7 +200,7 @@ namespace Technovert.BankApp.CLI
                             throw new ImplementationException("Not implemented");
                             break;
                         case StaffOptions.DeleteAccount:
-                            throw new ImplementationException("Not implemented");
+                            accountsController.DeleteAccount(userBankId);
                             break;
                         case StaffOptions.ShowAccountTransactionHistory:
                             userAccountId = inputs.GetAccountNumber();

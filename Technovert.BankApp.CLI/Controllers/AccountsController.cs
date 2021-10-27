@@ -48,7 +48,7 @@ namespace Technovert.BankApp.CLI.Controllers
             Account acc = accountService.GetAccount(bankId, accountId);
             if (acc == null)
             {
-                throw new AccountNumberException("Account Number already exists");
+                throw new AccountNumberException("Account Number does not exist");
             }
             return acc;
         }
@@ -87,6 +87,14 @@ namespace Technovert.BankApp.CLI.Controllers
                 Console.WriteLine("Internal Error");
             }
             return null;
+        }
+        public void DeleteAccount(string bankId)
+        {
+            string accountId = inputs.GetAccountNumber();
+            if (accountService.DeleteAccount(bankId, accountId))
+            {
+                Console.WriteLine("Account is deleted");
+            }
         }
     }
 }
