@@ -40,11 +40,10 @@ namespace Technovert.BankApp.Services
             return name.Substring(0, 3) + date;
         }
 
-
-
         public Account GetAccount(string bankId, string accountId)
         {
-            return bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
+            Account acc = bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
+            return acc; 
         }
 
         public void UpdateBalance(string bankId, string accountId, decimal balance)
@@ -52,6 +51,53 @@ namespace Technovert.BankApp.Services
             Account acc = GetAccount(bankId, accountId);
             acc.Balance = balance;
 
+        }
+        public bool DeleteAccount(string bankId, string accountId)
+        {
+            Account account = GetAccount(bankId, accountId);
+            try
+            {
+                if (account != null)
+                {
+                    bankService.GetBank(bankId).Accounts.Remove(account);
+                    return true;
+                }
+                else
+                {
+                    throw new AccountNumberException("Account does not exist");
+                }
+            }
+            catch(AccountNumberException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            return false;
+        }
+        public decimal GetBalance(string bankId,string accountId)
+        {
+            return GetAccount(bankId, accountId).Balance;
+        }
+        public bool ValidateUser(string bankId, string accountId, string password)
+        {
+            Account acc = GetAccount(bankId, accountId);
+            if (acc.Password != password)
+            {
+                throw new PasswordIncorrectException("Password Entered is Incorrect");
+            }
+            return true;
+        }
+        public bool ValidateStaff(string bankId, string accountId, string password)
+        {
+            Account acc = GetAccount(bankId, accountId);
+            if (acc.Type != AccountType.BankStaff)
+            {
+                throw new Models.Exceptions.UnauthorizedAccessException("You are not Authorized to Access this Page");
+            }
+            if (acc.Password != password)
+            {
+                throw new PasswordIncorrectException("Password Entered is Incorrect");
+            }
+            return true;
         }
 
     }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models.Enums;
+using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.Exceptions;
 
 namespace Technovert.BankApp.CLI
 {
@@ -11,23 +13,39 @@ namespace Technovert.BankApp.CLI
     {
         public string GetAccountNumber()
         {
-            Console.WriteLine("Please Enter Your Account Number :");
+            
+            Console.WriteLine("Please Enter the Account Number :");
             return (Console.ReadLine());
         }
         public string GetPassword()
         {
-            Console.WriteLine("Please Enter Your Password :");
-            return Console.ReadLine();
+            Console.WriteLine("Enter Password :");
+            string password = Console.ReadLine();
+            while (password.Length < 3)
+            {
+                Console.WriteLine("Password should have a length of minimum 4 characters");
+                Console.WriteLine("Enter Password :");
+                password = Console.ReadLine();
+            }
+            return password;
         }
         public string GetName()
         {
-            Console.WriteLine("Please Enter Your Name :");
-            return Console.ReadLine();
+            Console.WriteLine("Enter Name :");
+            string name = Console.ReadLine();
+            while((!name.All(Char.IsLetter)) || name.Length<3)
+            {
+                Console.WriteLine("Name should contain only letters and should have a length of minimum 3 characters");
+                Console.WriteLine("Enter Name :");
+                name = Console.ReadLine();
+            }
+            return name;
         }
         public string GetBankId()
         {
             Console.WriteLine("Please Enter Your Selection :");
-            return Console.ReadLine();
+            string bankId = Console.ReadLine();
+            return bankId;
         }
         public Gender GetGender()
         {
@@ -55,14 +73,29 @@ namespace Technovert.BankApp.CLI
             Console.WriteLine("Please Enter The Amount :");
             return Convert.ToDecimal(Console.ReadLine());
         }
-        public List<string> GetRecipient()
+        public decimal GetRtgs()
+        {
+            Console.WriteLine("Set RTGS value :");
+            return Convert.ToDecimal(Console.ReadLine())/100;
+        }
+        public decimal GetImps()
+        {
+            Console.WriteLine("Set IMPS value :");
+            return Convert.ToDecimal(Console.ReadLine())/100;
+        }
+        public List<string> GetRecipient(Controllers.BanksController banksController)
         {
             List<string> res = new List<string>();
             Console.WriteLine("Please Enter Recipient BankId");
             string recipBankId = Console.ReadLine();
+            if (banksController.GetBank(recipBankId) == null)
+                throw new BankIdException("Bank does not exist");
             res.Add(recipBankId);
             Console.WriteLine("Please Enter Recipient Account number");
-            res.Add((Console.ReadLine()));
+            string recipAccountId = Console.ReadLine();
+            if (banksController.GetBank(recipBankId).Accounts.SingleOrDefault(a => a.AccountId == recipBankId) == null)
+                throw new AccountNumberException("Account does not exist");
+            res.Add(recipAccountId);
             return res;
         }
         public TransactionMode GetTransactionMode()

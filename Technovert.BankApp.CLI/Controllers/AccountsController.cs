@@ -34,7 +34,7 @@ namespace Technovert.BankApp.CLI.Controllers
             catch (AccountNumberException e)
             {
 
-                Console.WriteLine("Account Number already exists.");
+                Console.WriteLine("Account Number already exists");
             }
             catch (Exception e)
             {
@@ -45,25 +45,12 @@ namespace Technovert.BankApp.CLI.Controllers
         public Account GetAccount(string bankId, string accountId)
         {
 
-            try
+            Account acc = accountService.GetAccount(bankId, accountId);
+            if (acc == null)
             {
-                Account acc = accountService.GetAccount(bankId, accountId);
-                if (acc == null)
-                {
-                    throw new AccountNumberException();
-                }
-                return acc;
+                throw new AccountNumberException("Account Number does not exist");
             }
-            catch (AccountNumberException e)
-            {
-
-                Console.WriteLine("Account  doesnot  exist.");
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Internal Error");
-            }
-            return null;
+            return acc;
         }
         public decimal GetBalance(string bankId, string accountId)
         {
@@ -72,14 +59,14 @@ namespace Technovert.BankApp.CLI.Controllers
                 Account acc = accountService.GetAccount(bankId, accountId);
                 if (acc == null)
                 {
-                    throw new AccountNumberException();
+                    throw new AccountNumberException("Account Number already exists");
                 }
                 return acc.Balance;
             }
             catch (AccountNumberException e)
             {
 
-                Console.WriteLine("Account  doesnot  exist.");
+                Console.WriteLine("Account  does not  exist.");
             }
             catch (Exception e)
             {
@@ -100,6 +87,14 @@ namespace Technovert.BankApp.CLI.Controllers
                 Console.WriteLine("Internal Error");
             }
             return null;
+        }
+        public void DeleteAccount(string bankId)
+        {
+            string accountId = inputs.GetAccountNumber();
+            if (accountService.DeleteAccount(bankId, accountId))
+            {
+                Console.WriteLine("Account is deleted");
+            }
         }
     }
 }

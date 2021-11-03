@@ -11,25 +11,32 @@ using Technovert.BankApp.Models.Enums;
 namespace Technovert.BankApp.CLI.Controllers
 {
     class TransactionsController
+
     {
         private TransactionService transactionService;
         private AccountService accountService;
+        private BankService bankService;
 
-        public TransactionsController(TransactionService transactionService, AccountService accountService)
+        public TransactionsController(TransactionService transactionService, AccountService accountService, BankService bankService)
         {
             this.transactionService = transactionService;
             this.accountService = accountService;
+            this.bankService = bankService;
         }
         public string Withdraw(string bankId, string accountId, decimal amount)
         {
             string id = "";
             try
             {
-                id = transactionService.AddTransaction(bankId, accountId, "", "", amount, TransactionType.Withdraw, TransactionMode.Standard);
+                if(amount<0 || amount>accountService.GetBalance(bankId,accountId))
+                {
+                    throw new BalanceException("Insufficient Balance or Invalid Amount");
+                }
+                id = transactionService.AddTransaction(bankId, accountId, "USER", "USER", amount, TransactionType.Withdraw, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Insufficient Balance or InvalidAmount");
             }
             catch (Exception)
             {
@@ -38,17 +45,31 @@ namespace Technovert.BankApp.CLI.Controllers
             }
             return id;
         }
-        public string Deposit(string bankId, string accountId, decimal amount)
+        public string Deposit(string bankId, string accountId)
         {
-
+            Console.WriteLine("List of currencies accepted by the bank");
+            foreach (Currency currency in bankService.GetBank(bankId).Currencies)
+            {
+                Console.WriteLine(currency.Code+"-->"+currency.Name);
+            }
+            Console.WriteLine("Enter currency code");
+            string currencyCode = Console.ReadLine();
+            Console.WriteLine("Enter amount to deposit:");
+            decimal amount = Convert.ToDecimal(Console.ReadLine());
+            amount = transactionService.ConvertToDefaultCurrency(currencyCode, amount, bankId);
             string id = "";
             try
             {
-                id = transactionService.AddTransaction("", "", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
+                if(amount<0)
+                {
+                    throw new BalanceException("Invalid Amount");
+                }
+
+                id = transactionService.AddTransaction("USER", "USER", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Invalid Amount");
             }
             catch (Exception)
             {
@@ -62,11 +83,15 @@ namespace Technovert.BankApp.CLI.Controllers
             string id = "";
             try
             {
+                if (amount < 0 || amount > accountService.GetBalance(sourceBankId, sourceAccountId))
+                {
+                    throw new BalanceException("Insufficient Balance or Invalid Amount");
+                }
                 id = transactionService.AddTransaction(sourceBankId, sourceAccountId, destinationBankId, destinationAccountId, amount, TransactionType.Transfer, transactionMode);
             }
             catch (BalanceException)
             {
-                Console.WriteLine("Insufficient Balance");
+                Console.WriteLine("Insufficient Balance or Invalid Amount");
             }
             catch (Exception)
             {

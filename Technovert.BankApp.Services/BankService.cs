@@ -28,6 +28,17 @@ namespace Technovert.BankApp.Services
             {
                 throw new Exception("Bank Exists with this name!");
             }
+            Account manager = new Account
+            {
+                AccountId = BankConstants.StaffName,
+                Name = BankConstants.StaffName,
+                Password = BankConstants.StaffName,
+                Balance = 0m,
+                Gender = Models.Enums.Gender.Male,
+                Status = Models.Enums.Status.Active,
+                Type = Models.Enums.AccountType.BankStaff,
+                Transactions = new List<Transaction>()
+            };
             Bank bank = new Bank
             {
                 BankId = GenerateBankId(name),
@@ -38,45 +49,51 @@ namespace Technovert.BankApp.Services
                 UpdatedOn = DateTime.Now,
                 Accounts = new List<Account>(),
                 Currencies = new List<Currency>(),
+                DefaultCurrency = dataStore.Currencies.SingleOrDefault(c => c.Code == "INR"),
                 RTGSToSame = 0m,
                 IMPSToSame = 0.05m,
                 RTGSToOther = 0.02m,
                 IMPSToOther = 0.06m
             };
+            bank.Currencies.Add(dataStore.Currencies.SingleOrDefault(c => c.Code == "INR"));
+            bank.Accounts.Add(manager);
             dataStore.Banks.Add(bank);
             return bank.BankId;
         }
         public Bank GetBank(string bankId)
         {
 
-            return dataStore.Banks.SingleOrDefault(b => b.BankId == bankId);
+            Bank b = dataStore.Banks.SingleOrDefault(b => b.BankId == bankId);
+            if (b == null)
+            {
+                throw new BankIdException("Bank does not exist" );
+            }
+            return b;
         }
-        public void UpdateServiceChargesForSameBank(string bankId, decimal RTGS, decimal IMPS)
+        public void UpdateServiceChargesForSameBank(decimal RTGS, decimal IMPS, string bankId)
         {
             Bank bank = GetBank(bankId);
             bank.RTGSToSame = RTGS;
             bank.IMPSToSame = IMPS;
 
         }
-        public void UpdateServiceChargesForOtherBanks(string bankId, decimal RTGS, decimal IMPS)
+        public void UpdateServiceChargesForOtherBanks(decimal RTGS, decimal IMPS, string bankId)
         {
             Bank bank = GetBank(bankId);
             bank.RTGSToOther = RTGS;
             bank.IMPSToOther = IMPS;
         }
-        public void AddCurrency(string bankId, string name, String code, decimal exchangeRate)
+        public void AddNewCurrency(string bankId,String code)
         {
             Bank bank = GetBank(bankId);
             Currency currency = new Currency
             {
-                Name = name,
+                Name = dataStore.Currencies.SingleOrDefault(c => c.Code == code).Name,
                 Code = code,
-                ExchangeRate = exchangeRate,
+                ExchangeRate = dataStore.Currencies.SingleOrDefault(c => c.Code == code).ExchangeRate,
             };
             bank.Currencies.Add(currency);
         }
-
-
 
     }
 }

@@ -6,8 +6,12 @@ using System.Threading.Tasks;
 
 namespace Technovert.BankApp.Models.Exceptions
 {
-    public class IFSCException:Exception
+    public class ImplementationException : Exception
     {
-        
+        public ImplementationException(string message) : base(message)
+        {
+
+        }
+
     }
 }

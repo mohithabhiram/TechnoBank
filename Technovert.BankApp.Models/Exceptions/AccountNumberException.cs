@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Technovert.BankApp.Models.Exceptions
 {
-    public class AccountNumberException:Exception
+    public class AccountNumberException : Exception
     {
+        public AccountNumberException(string message) : base(message)
+        {
+
+        }
+          
     }
 }

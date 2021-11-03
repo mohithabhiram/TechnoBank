@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Technovert.BankApp.Models.Enums
+namespace Technovert.BankApp.Services
 {
-    public enum TransactionMode
+    public class BankConstants
     {
-        RTGS=1,
-        IMPS,
-        Standard
+        public const string StaffName = "ADMIN";
     }
 }

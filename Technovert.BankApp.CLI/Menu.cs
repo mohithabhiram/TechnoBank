@@ -12,18 +12,30 @@ namespace Technovert.BankApp.CLI
     {
         public static void BankMenu(DataStore datastore)
         {
-            Console.WriteLine("Choose Your Bank");
             foreach (Bank bank in datastore.Banks)
             {
                 Console.WriteLine(bank.BankId + " | " + bank.Name);
             }
+            Console.WriteLine("-------------------------");
         }
-        public static void LoginMenu()
+        public static void UserLoginMenu()
         {
             Console.WriteLine("1-> Create Account");
             Console.WriteLine("2-> Login");
             Console.WriteLine("3-> Back");
             Console.WriteLine("4-> Exit");
+        }
+        public static void LoginMenu()
+        {
+            Console.WriteLine("LOGIN MENU:   ");
+            Console.WriteLine("Choose and Enter The option below");
+            Console.WriteLine("Option | Description");
+            Console.WriteLine("-------------------------");
+            Console.WriteLine("   1   | StaffLogin");
+            Console.WriteLine("   2   | UserLogin");
+            Console.WriteLine("   3   | Back");
+            Console.WriteLine("   4   | Exit");
+            Console.WriteLine("-------------------------");
         }
         public static void UserMenu()
         {
@@ -32,6 +44,30 @@ namespace Technovert.BankApp.CLI
             Console.WriteLine("3.Transfer");
             Console.WriteLine("4.Show Balance");
             Console.WriteLine("5.Show Transaction History");
+            Console.WriteLine("6.Back");
+            Console.WriteLine("7.Exit");
+        }
+
+
+        public static void StaffMenu()
+        {
+            Console.WriteLine("STAFF MENU:   ");
+            Console.WriteLine("Choose and Enter the option below");
+            Console.WriteLine("Option | Description");
+            Console.WriteLine("----------------------------------");
+            Console.WriteLine("   1   | CreateAccount");
+            Console.WriteLine("   2   | UpdateAcount");
+            Console.WriteLine("   3   | DeleteAccount");
+            Console.WriteLine("   4   | UpdateServiceChargesForSameBank");
+            Console.WriteLine("   5   | UpdateServiceChargesForOtherBanks");
+            Console.WriteLine("   6   | ShowAccountTransactionHistory");
+            Console.WriteLine("   7   | RevertTransaction");
+            Console.WriteLine("   8   | AddNewCurrency");
+            Console.WriteLine("   9   | Back");
+            Console.WriteLine("  10   | Exit");
+            Console.WriteLine("----------------------------------");
         }
     }
 }
+
+        

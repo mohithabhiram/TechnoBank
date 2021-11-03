@@ -12,8 +12,8 @@ namespace Technovert.BankApp.Models
         public string BankId { get; set; }
         public string Name { get; set; }
         public List<Account> Accounts { get; set; }
-        //public List<BankStaff> StaffList { get; set; }
         public List<Currency> Currencies { get; set; }
+        public Currency DefaultCurrency { get; set; }
         public decimal RTGSToSame { get; set; }
         public decimal RTGSToOther { get; set; }
         public decimal IMPSToSame { get; set; }
