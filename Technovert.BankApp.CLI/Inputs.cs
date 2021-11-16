@@ -43,7 +43,7 @@ namespace Technovert.BankApp.CLI
         }
         public string GetBankId()
         {
-            Console.WriteLine("Please Enter Your Selection :");
+            Console.WriteLine("Please Enter the Bank Id :");
             string bankId = Console.ReadLine();
             return bankId;
         }
@@ -93,17 +93,10 @@ namespace Technovert.BankApp.CLI
             res.Add(recipBankId);
             Console.WriteLine("Please Enter Recipient Account number");
             string recipAccountId = Console.ReadLine();
-            if (banksController.GetBank(recipBankId).Accounts.SingleOrDefault(a => a.AccountId == recipBankId) == null)
+            if (banksController.GetBank(recipBankId).Accounts.SingleOrDefault(a => a.AccountId == recipAccountId) == null)
                 throw new AccountNumberException("Account does not exist");
             res.Add(recipAccountId);
             return res;
-        }
-        public TransactionMode GetTransactionMode()
-        {
-            Console.WriteLine("Enter Transaction Mode:\nRTGS\nIMPS");
-            string mode = Console.ReadLine();
-            Enum.TryParse(mode, out TransactionMode transactionMode);
-            return transactionMode;
         }
         public AccountType GetAccountType()
         {

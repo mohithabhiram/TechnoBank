@@ -83,9 +83,14 @@ namespace Technovert.BankApp.Services
             bank.RTGSToOther = RTGS;
             bank.IMPSToOther = IMPS;
         }
-        public void AddNewCurrency(string bankId,String code)
+        public void AddCurrency(string bankId,String code)
         {
             Bank bank = GetBank(bankId);
+            Currency c = dataStore.Currencies.SingleOrDefault(c => c.Code == code);
+            if(c == null)
+            {
+                throw new InvalidCurrencyException("Currency does not exist");
+            }
             Currency currency = new Currency
             {
                 Name = dataStore.Currencies.SingleOrDefault(c => c.Code == code).Name,

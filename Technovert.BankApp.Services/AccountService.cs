@@ -42,8 +42,16 @@ namespace Technovert.BankApp.Services
 
         public Account GetAccount(string bankId, string accountId)
         {
-            Account acc = bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
-            return acc; 
+            try
+            {
+                Account acc = bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
+                return acc;
+            }
+            catch(AccountNumberException)
+            {
+                Console.WriteLine("Account does not exist");
+            }
+            return null; 
         }
 
         public void UpdateBalance(string bankId, string accountId, decimal balance)
@@ -98,6 +106,12 @@ namespace Technovert.BankApp.Services
                 throw new PasswordIncorrectException("Password Entered is Incorrect");
             }
             return true;
+        }
+        public void UpdateAccount(string bankId,string accountId,string name,string password)
+        {
+            Account acc = GetAccount(bankId, accountId);
+            acc.Name = name;
+            acc.Password = password;
         }
 
     }

@@ -100,15 +100,18 @@ namespace Technovert.BankApp.Services
         //Still needs some checking with existing Ids and adding milliseconds
         public string GenerateTransactionId(string sourceBankId, string sourceAccountId, string destinationBankId, string destinationAccountId,TransactionType transactionType)
         {
-            DateTime d = DateTime.Now;
-            string date = DateTime.Now.ToString("ddMMyy");
+            /*string timestamp = DateTime.UtcNow.ToString("ddhmsf",
+                                        System.Globalization.CultureInfo.InvariantCulture);*/
+            string timestamp = DateTime.Now.ToString("ddMMyys");
+            string id;
             //for deposit
             if (transactionType == TransactionType.Deposit)
             {
-                return "TXN" + destinationBankId + destinationAccountId + date;
+                id = ("TXN" + destinationBankId + destinationAccountId + timestamp).PadRight(29,'0');
+                return id;
             }
             //for withdraw and transfer
-            return "TXN"+sourceBankId+sourceAccountId+date;
+            return ("TXN" + sourceBankId + sourceAccountId + timestamp).PadRight(29,'0');
         }
         public decimal ConvertToDefaultCurrency(string currencyCode, decimal amount, string bankId)
         {
@@ -126,6 +129,10 @@ namespace Technovert.BankApp.Services
             Account account = accountService.GetAccount(bankId, accountId);
             var transaction = account.Transactions.SingleOrDefault(t => t.TransactionId == TransactionId);
             return transaction;
+        }
+        public void RemoveTransaction(string bankId, string accountId, string transactionId)
+        {
+            accountService.GetAccount(bankId,accountId).Transactions.RemoveAll(t => t.TransactionId == transactionId);
         }
 
     }

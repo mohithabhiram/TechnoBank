@@ -70,11 +70,11 @@ namespace Technovert.BankApp.CLI.Controllers
             decimal rtgs = inputs.GetRtgs();
             bankService.UpdateServiceChargesForOtherBanks(rtgs, imps, userBankId);
         }
-        public void AddNewCurrency(string bankId, string currencyCode)
+        public void AddCurrency(string bankId, string currencyCode)
         {
             if(bankService.GetBank(bankId).Currencies.SingleOrDefault(c => c.Code == currencyCode)==null)
             {
-                bankService.AddNewCurrency(bankId, currencyCode); 
+                bankService.AddCurrency(bankId, currencyCode); 
             }
             else
             {
@@ -83,6 +83,7 @@ namespace Technovert.BankApp.CLI.Controllers
             }
            
         }
+
 
     }
 }
