@@ -30,7 +30,7 @@ namespace Technovert.BankApp.CLI
             AccountsController accountsController = new AccountsController(accountService, inputs);
             TransactionsController transactionsController = new TransactionsController(transactionService, accountService, bankService);
 
-
+            //Utilities.CreateBank.CustomBanks(banksController);
             while (true)
             {
                 if (currentMenu == (int)Menus.BankMenu)
@@ -184,7 +184,7 @@ namespace Technovert.BankApp.CLI
                             Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
                             foreach (Transaction t in tHist)
                             {
-                                Console.WriteLine($" {t.TransactionId} |  {t.SourceBankId}  |   {t.SourceAccountId}    | {t.DestinationBankId} |  {t.DestinationAccountId}   | {t.Type}      {t.Amount}   ");
+                                Console.WriteLine($" {t.TransactionId} |  {t.SourceBankId}  |   {t.SourceAccountId}    | {t.DestinationBankId} |  {t.DestinationAccountId}   | {t.Type}       INR {t.Amount}   ");
                             }
                             break;
                         case UserOptions.Back:

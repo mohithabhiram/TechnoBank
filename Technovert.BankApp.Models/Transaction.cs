@@ -9,10 +9,13 @@ namespace Technovert.BankApp.Models
 {
     public class Transaction
     {
+        [Key]
         public string TransactionId { get; set; }
         public string SourceAccountId { get; set; }
         public string SourceBankId { get; set; }
         public string DestinationAccountId { get; set; }
+        public Account SourceAccount { get; set; }
+        public Account DestinationAccount { get; set; }
         public string DestinationBankId { get; set; }
         public decimal Amount { get; set; }
         public TransactionType Type { get; set; }
