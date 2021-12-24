@@ -56,6 +56,18 @@ namespace Technovert.BankApp.API.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpGet("balance/{bankId}/{id}")]
+        public IActionResult GetBalance(string bankId, string id)
+        {
+            
+            var acc = _accountService.GetAccount(bankId, id);
+            if (_accountService.GetAccount(bankId, id) == null)
+                return BadRequest();
+            var accDTO = _mapper.Map<AccountBalanceDTO>(acc);
+            return Ok(accDTO);
+        }
+
         [HttpPost("{bankId}")]
         public IActionResult Post(string bankId,[FromBody] CreateAccountDTO accountDTO)
         {

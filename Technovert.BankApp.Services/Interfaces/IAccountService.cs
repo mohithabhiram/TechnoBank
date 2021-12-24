@@ -15,5 +15,6 @@ namespace Technovert.BankApp.Services.Interfaces
         public Account DeleteAccount(string bankId, string accountid);
         public IEnumerable<Account> GetAllAccounts(string bankId);
         public string GenerateAccountId(string name);
+        public void UpdateBalance(string bankId, string acccountId, decimal balance);
     }
 }

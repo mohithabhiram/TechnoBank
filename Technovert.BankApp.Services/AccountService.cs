@@ -141,5 +141,10 @@ namespace Technovert.BankApp.Services
             return _cxt.Accounts.Where(a => a.BankId == bankId).ToList();
         }
 
+        public void UpdateBalance(string bankId, string accountId, decimal balance)
+        {
+            var acc = _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
+            acc.Balance = balance;
+        }
     }
 }
