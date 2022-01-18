@@ -14,6 +14,6 @@ namespace Technovert.BankApp.API.DTOs.Bank
         public decimal RTGSToOther { get; set; }
         public decimal IMPSToSame { get; set; }
         public decimal IMPSToOther { get; set; }
-        public string CreatedBy { get; set; }
+        public string? CreatedBy { get; set; }
     }
 }

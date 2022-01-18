@@ -61,6 +61,7 @@ namespace Technovert.BankApp.API.Controllers
                 var bank = _mapper.Map<Bank>(bankDTO);
                 bank.BankId = _bankService.GenerateBankId(bank.Name);
                 bank.CreatedOn = DateTime.Now;
+                bank.CreatedBy = "Abhiram";
                 bank.UpdatedBy = bank.CreatedBy;
                 bank.UpdatedOn = DateTime.Now;
                 var createdBank = _bankService.CreateBank(bank);

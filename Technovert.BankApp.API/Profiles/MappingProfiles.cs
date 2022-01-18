@@ -10,9 +10,9 @@ using Technovert.BankApp.Models;
 
 namespace Technovert.BankApp.API.Profiles
 {
-    public class BankProfile : Profile
+    public class MappingProfiles : Profile
     {
-        public BankProfile()
+        public MappingProfiles()
         {
             CreateMap<CreateBankDTO, Bank>();
             CreateMap<CreateAccountDTO, Account>();

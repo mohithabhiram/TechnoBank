@@ -52,8 +52,7 @@ namespace Technovert.BankApp.Services
         }
         public string GenerateTransactionId(string sourceBankId, string sourceAccountId, string destinationBankId, string destinationAccountId, TransactionType transactionType)
         {
-            /*string timestamp = DateTime.UtcNow.ToString("ddhmsf",
-                                        System.Globalization.CultureInfo.InvariantCulture);*/
+            
             string timestamp = DateTime.Now.ToString("ddMMyys");
             string id;
             //for deposit

@@ -43,7 +43,7 @@ namespace Technovert.BankApp.API
             services.AddScoped<IBankService, BankService>();
             services.AddScoped<ITransactionService, TransactionService>();
 
-            services.AddAutoMapper(typeof(BankProfile));
+            services.AddAutoMapper(typeof(MappingProfiles));
 
         }
 
