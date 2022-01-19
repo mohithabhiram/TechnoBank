@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -11,6 +12,7 @@ using Technovert.BankApp.Services.Interfaces;
 
 namespace Technovert.BankApp.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
@@ -25,7 +27,7 @@ namespace Technovert.BankApp.API.Controllers
         }
 
 
-
+        [Authorize(Roles ="BankStaff")]
         [HttpGet("{bankId}")]
         public IActionResult Get(string bankId)
         {
@@ -89,7 +91,17 @@ namespace Technovert.BankApp.API.Controllers
 
         }
 
+        [AllowAnonymous]
+        [HttpPost("authenticate/{bankId}")]
+        public IActionResult Authenticate(string bankId, [FromBody] AuthenticateAccountDTO accountDTO)
+        {
+            var token = _accountService.Authenticate(accountDTO.AccountId, accountDTO.Password);
+            if (token == null)
+                return Unauthorized();
+            return Ok(token);
+        }
 
+         
 
 
     }

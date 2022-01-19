@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
@@ -62,6 +65,30 @@ namespace Technovert.BankApp.Services
         {
             var acc = _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
             acc.Balance = balance;
+        }
+
+        public string Authenticate(string accountId, string password)
+        {
+            Account account = _cxt.Accounts.SingleOrDefault(a => a.AccountId == accountId);
+            if (account == null || account.Password!=password)
+                return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey = Encoding.ASCII.GetBytes("this is my secret key");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                    new Claim[] {
+                        new Claim(ClaimTypes.Name,account.AccountId.ToString()) ,
+                        new Claim(ClaimTypes.Role,account.Type.ToString())
+                    }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+
+
         }
     }
 }

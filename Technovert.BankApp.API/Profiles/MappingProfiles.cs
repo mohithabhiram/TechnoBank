@@ -23,6 +23,7 @@ namespace Technovert.BankApp.API.Profiles
 
             CreateMap<UpdateBankDTO, Bank>();
             CreateMap<UpdateAccountDTO, Account>();
+            CreateMap<AuthenticateAccountDTO, Account>();
 
             CreateMap<Transaction, GetTransactionDTO>();
             CreateMap<CreateTransactionDTO, Transaction>();
