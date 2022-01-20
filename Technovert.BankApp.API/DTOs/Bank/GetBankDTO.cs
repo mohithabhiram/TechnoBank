@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Technovert.BankApp.Models;
 
-namespace Technovert.BankApp.Models
+namespace Technovert.BankApp.API.DTOs.Bank
 {
-    public class Bank
+    public class GetBankDTO
     {
-        [Key]
         public string BankId { get; set; }
         public string Name { get; set; }
         public Currency DefaultCurrency { get; set; }
@@ -21,7 +19,5 @@ namespace Technovert.BankApp.Models
         public string CreatedBy { get; set; }
         public DateTime UpdatedOn { get; set; }
         public string UpdatedBy { get; set; }
-        public ICollection<Account> Accounts { get; set; }
-        public ICollection<Currency> Currencies { get; set; }
     }
 }

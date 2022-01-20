@@ -1,38 +1,27 @@
-﻿using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
 using Technovert.BankApp.Models.Enums;
 using Technovert.BankApp.Models.Exceptions;
+using Technovert.BankApp.Services.Interfaces;
 
 namespace Technovert.BankApp.Services
 {
-    public class AccountService
+    public class AccountService : IAccountService
     {
-        public BankService bankService;
-        public AccountService(BankService bankService)
+        private readonly BankDbContext _cxt;
+       
+        public AccountService(BankDbContext bankDbContext)
         {
-            this.bankService = bankService;
+            _cxt = bankDbContext;
         }
-        public string AddAccount(String name, String password, string bankId, Gender gender, AccountType type)
-        {
-            Account account = new Account
-            {
-                AccountId = GenerateAccountId(name),
-                BankId = bankId,
-                Type = type,
-                Name = name,
-                Password = password,
-                Balance = 0m,
-                Gender = gender,
-                Status = Models.Enums.Status.Active,
-                Transactions = new List<Transaction>()
-            };
-            bankService.GetBank(bankId).Accounts.Add(account);
-            return account.AccountId;
-        }
+      
         public string GenerateAccountId(string name)
         {
             DateTime d = DateTime.Now;
@@ -42,63 +31,64 @@ namespace Technovert.BankApp.Services
 
         public Account GetAccount(string bankId, string accountId)
         {
-            Account acc = bankService.GetBank(bankId).Accounts.SingleOrDefault(a => a.AccountId == accountId);
-            return acc; 
+            
+            return _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
+        }
+
+      
+
+        public Account CreateAccount(Account account)
+        {
+            _cxt.Accounts.Add(account);
+            _cxt.SaveChanges();
+            var createdAccount = _cxt.Accounts.FirstOrDefault(a => a.AccountId == account.AccountId);
+            return createdAccount;
+
+        }
+
+        public Account UpdateAccount(Account account)
+        {
+            throw new NotImplementedException();
+        }
+
+        Account IAccountService.DeleteAccount(string bankId, string accountid)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<Account> GetAllAccounts(string bankId)
+        {
+            return _cxt.Accounts.Where(a => a.BankId == bankId).ToList();
         }
 
         public void UpdateBalance(string bankId, string accountId, decimal balance)
         {
-            Account acc = GetAccount(bankId, accountId);
+            var acc = _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
             acc.Balance = balance;
-
-        }
-        public bool DeleteAccount(string bankId, string accountId)
-        {
-            Account account = GetAccount(bankId, accountId);
-            try
-            {
-                if (account != null)
-                {
-                    bankService.GetBank(bankId).Accounts.Remove(account);
-                    return true;
-                }
-                else
-                {
-                    throw new AccountNumberException("Account does not exist");
-                }
-            }
-            catch(AccountNumberException e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            return false;
-        }
-        public decimal GetBalance(string bankId,string accountId)
-        {
-            return GetAccount(bankId, accountId).Balance;
-        }
-        public bool ValidateUser(string bankId, string accountId, string password)
-        {
-            Account acc = GetAccount(bankId, accountId);
-            if (acc.Password != password)
-            {
-                throw new PasswordIncorrectException("Password Entered is Incorrect");
-            }
-            return true;
-        }
-        public bool ValidateStaff(string bankId, string accountId, string password)
-        {
-            Account acc = GetAccount(bankId, accountId);
-            if (acc.Type != AccountType.BankStaff)
-            {
-                throw new Models.Exceptions.UnauthorizedAccessException("You are not Authorized to Access this Page");
-            }
-            if (acc.Password != password)
-            {
-                throw new PasswordIncorrectException("Password Entered is Incorrect");
-            }
-            return true;
         }
 
+        public string Authenticate(string accountId, string password)
+        {
+            Account account = _cxt.Accounts.SingleOrDefault(a => a.AccountId == accountId);
+            if (account == null || account.Password!=password)
+                return null;
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenKey = Encoding.ASCII.GetBytes("this is my secret key");
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(
+                    new Claim[] {
+                        new Claim(ClaimTypes.Name,account.AccountId.ToString()) ,
+                        new Claim(ClaimTypes.Role,account.Type.ToString())
+                    }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials =
+                new SigningCredentials(new SymmetricSecurityKey(tokenKey), SecurityAlgorithms.HmacSha256)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+
+
+        }
     }
 }

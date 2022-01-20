@@ -96,5 +96,28 @@ namespace Technovert.BankApp.CLI.Controllers
                 Console.WriteLine("Account is deleted");
             }
         }
+        public void UpdateAccount(string bankId)
+        {
+            try
+            {
+                string accountId = inputs.GetAccountNumber();
+                Account acc = GetAccount(bankId, accountId);
+                Console.WriteLine("Set new name:");
+                string name = inputs.GetName();
+                Console.WriteLine("Set new password:");
+                string password = inputs.GetPassword();
+                accountService.UpdateAccount(bankId, accountId, name, password);
+
+            }
+            catch (AccountNumberException e)
+            {
+
+                Console.WriteLine("Account  does not  exist.");
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Internal error");
+            }
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Technovert.BankApp.Models.Enums
         UpdateServiceChargesForOtherBanks,
         ShowAccountTransactionHistory,
         RevertTransaction,
-        AddNewCurrency,
+        AddCurrency,
         Back,
         Exit
     }

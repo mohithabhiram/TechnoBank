@@ -32,7 +32,7 @@ namespace Technovert.BankApp.CLI.Controllers
                 {
                     throw new BalanceException("Insufficient Balance or Invalid Amount");
                 }
-                id = transactionService.AddTransaction(bankId, accountId, "USER", "USER", amount, TransactionType.Withdraw, TransactionMode.Standard);
+                id = transactionService.AddTransaction(bankId, accountId, bankId, "USER".PadRight(9), amount, TransactionType.Withdraw, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
@@ -54,6 +54,8 @@ namespace Technovert.BankApp.CLI.Controllers
             }
             Console.WriteLine("Enter currency code");
             string currencyCode = Console.ReadLine();
+            if (bankService.GetBank(bankId).Currencies.SingleOrDefault(c => c.Code == currencyCode) == null)
+                throw new InvalidCurrencyException("Currency does not exist");
             Console.WriteLine("Enter amount to deposit:");
             decimal amount = Convert.ToDecimal(Console.ReadLine());
             amount = transactionService.ConvertToDefaultCurrency(currencyCode, amount, bankId);
@@ -65,7 +67,7 @@ namespace Technovert.BankApp.CLI.Controllers
                     throw new BalanceException("Invalid Amount");
                 }
 
-                id = transactionService.AddTransaction("USER", "USER", bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
+                id = transactionService.AddTransaction(bankId, "USER".PadRight(9), bankId, accountId, amount, TransactionType.Deposit, TransactionMode.Standard);
             }
             catch (BalanceException)
             {
@@ -99,6 +101,59 @@ namespace Technovert.BankApp.CLI.Controllers
 
             }
             return id;
+        }
+        public void DisplayTransactions(string userAccountId,string userBankId,List<Transaction> hist,AccountsController accountsController)
+        {
+            Console.WriteLine("       TransactionId           | Source Bank | Source Account | Dest Bank | Dest Account |   Type      Amount  ");
+            Console.WriteLine("----------------------------------------------------------------------------------------------------------------");
+            foreach (Transaction t in hist)
+            {
+                Console.WriteLine($" {t.TransactionId} |  {t.SourceBankId}  |   {t.SourceAccountId}    | {t.DestinationBankId} |  {t.DestinationAccountId}   | {t.Type}      {t.Amount}   ");
+            }
+        }
+        public TransactionMode GetTransactionMode(decimal amount)
+        {
+            if (amount > 200000)
+                return TransactionMode.RTGS;
+            else
+                return TransactionMode.IMPS;
+        }
+        public void RevertTransaction(string userAccountId, string userBankId,List<Transaction> hist)
+        {
+            Console.WriteLine("Select a Transaction Id to revert the transaction:");
+            string transactionId = Console.ReadLine();
+            Transaction transaction = hist.SingleOrDefault(t => t.TransactionId == transactionId);
+            if (transaction == null)
+                throw new TransactionIdException("Invalid Transaction Id");
+            decimal balance;
+            try
+            {
+                if (transaction.Type != TransactionType.Withdraw)
+                {
+                    if (transaction.Type == TransactionType.Deposit)
+                    {
+                        balance = accountService.GetBalance(userBankId, userAccountId) - transaction.Amount;
+                        accountService.UpdateBalance(userBankId, userAccountId, balance);
+                    }
+                    else
+                    {
+                        balance = accountService.GetBalance(userBankId, userAccountId);
+                        accountService.UpdateBalance(userBankId, userAccountId, balance + transaction.Amount);
+                        decimal destinationAccountBalance = accountService.GetBalance(transaction.DestinationBankId, transaction.DestinationAccountId);
+                        accountService.UpdateBalance(transaction.DestinationBankId, transaction.DestinationAccountId, destinationAccountBalance - transaction.Amount);
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Withdrawals cannot be reverted");
+                }
+            }
+            catch(Exception)
+            {
+                Console.WriteLine("Internal Error");
+            }
+            hist.RemoveAll(t => t.TransactionId == transactionId);
+            transactionService.RemoveTransaction(userBankId, userAccountId, transactionId);
         }
     }
 }

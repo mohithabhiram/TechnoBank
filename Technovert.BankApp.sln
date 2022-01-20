@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31727.386
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technovert.BankApp.CLI", "Technovert.BankApp.CLI\Technovert.BankApp.CLI.csproj", "{8401FD03-1E80-43CF-AD0E-72540E649154}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Technovert.BankApp.CLI", "Technovert.BankApp.CLI\Technovert.BankApp.CLI.csproj", "{8401FD03-1E80-43CF-AD0E-72540E649154}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technovert.BankApp.Models", "Technovert.BankApp.Models\Technovert.BankApp.Models.csproj", "{589B16A9-3BF1-4D1A-BF9C-9AB3EF99AEC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Technovert.BankApp.Models", "Technovert.BankApp.Models\Technovert.BankApp.Models.csproj", "{589B16A9-3BF1-4D1A-BF9C-9AB3EF99AEC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technovert.BankApp.Services", "Technovert.BankApp.Services\Technovert.BankApp.Services.csproj", "{E717771C-2FDE-494B-8614-9F30DD905F6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Technovert.BankApp.Services", "Technovert.BankApp.Services\Technovert.BankApp.Services.csproj", "{E717771C-2FDE-494B-8614-9F30DD905F6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Technovert.BankApp.API", "Technovert.BankApp.API\Technovert.BankApp.API.csproj", "{CDE2ECDE-D990-45D1-983B-47F62325FC18}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E717771C-2FDE-494B-8614-9F30DD905F6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E717771C-2FDE-494B-8614-9F30DD905F6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E717771C-2FDE-494B-8614-9F30DD905F6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDE2ECDE-D990-45D1-983B-47F62325FC18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDE2ECDE-D990-45D1-983B-47F62325FC18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDE2ECDE-D990-45D1-983B-47F62325FC18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDE2ECDE-D990-45D1-983B-47F62325FC18}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
