@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
 
-namespace Technovert.BankApp.API.DTOs.Bank
+namespace Technovert.BankApp.Models.DTOs.Bank
 {
     public class GetBankDTO
     {
         public string BankId { get; set; }
         public string Name { get; set; }
-        public Currency DefaultCurrency { get; set; }
+        public string DefaultCurrencyCode { get; set; }
         public decimal RTGSToSame { get; set; }
         public decimal RTGSToOther { get; set; }
         public decimal IMPSToSame { get; set; }

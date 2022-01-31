@@ -6,13 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Technovert.BankApp.API.DTOs.Account;
+using Technovert.BankApp.Models.DTOs.Account;
 using Technovert.BankApp.Models;
-using Technovert.BankApp.Services.Interfaces;
+using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
@@ -27,19 +27,20 @@ namespace Technovert.BankApp.API.Controllers
         }
 
 
-        [Authorize(Roles ="BankStaff")]
+        //[Authorize(Roles ="BankStaff")]
         [HttpGet("{bankId}")]
         public IActionResult Get(string bankId)
         {
             try
             {
-                var all = _accountService.GetAllAccounts(bankId);
-                var allDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(all);
+                var allAcc = _accountService.GetAllAccounts(bankId);
+                if (allAcc == null)
+                    return NotFound();
+                var allDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(allAcc);
                 return Ok(allDTO);
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
         }
@@ -75,20 +76,40 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
+
                 var account = _mapper.Map<Account>(accountDTO);
-                account.Status = Models.Enums.Status.Active;
-                account.AccountId = _accountService.GenerateAccountId(account.Name);
-                account.BankId = bankId;
-                var createdAccount = _accountService.CreateAccount(account);
+                var createdAccount = _accountService.CreateAccount(account,bankId);
                 return Created(nameof(GetAccount),createdAccount);
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
 
 
+        }
+
+        [HttpPut("{accountId}")]
+        public IActionResult UpdateAccount(string bankId, string accountId, [FromBody] UpdateAccountDTO accountDTO)
+        {
+            var updatedAcc = _accountService.UpdateAccount(bankId,accountId,accountDTO);
+            var updatedAccDTO = _mapper.Map<UpdateAccountDTO>(updatedAcc);
+            return Ok(updatedAccDTO);
+        }
+
+
+        [HttpDelete("{bankId}/{accountId}")]
+        public IActionResult Delete(string bankId, string accountId)
+        {
+            try
+            {
+                var deletedAccount = _accountService.DeleteAccount(bankId,accountId);
+                return Ok(deletedAccount);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [AllowAnonymous]

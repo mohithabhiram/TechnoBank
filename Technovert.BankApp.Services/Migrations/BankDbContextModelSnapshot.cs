@@ -63,7 +63,7 @@ namespace Technovert.BankApp.Services.Migrations
                             AccountId = "abc",
                             Balance = 20m,
                             BankId = "abc",
-                            Gender = 2,
+                            Gender = 1,
                             Name = "John Doe",
                             Password = "1234",
                             Status = 1,
@@ -117,14 +117,15 @@ namespace Technovert.BankApp.Services.Migrations
                         {
                             BankId = "abc",
                             CreatedBy = "admin",
-                            CreatedOn = new DateTime(2021, 12, 22, 22, 31, 51, 745, DateTimeKind.Local).AddTicks(3493),
+                            CreatedOn = new DateTime(2022, 1, 27, 10, 39, 47, 352, DateTimeKind.Local).AddTicks(926),
+                            DefaultCurrencyCode = "INR",
                             IMPSToOther = 0.07m,
                             IMPSToSame = 0.03m,
                             Name = "New Bank",
                             RTGSToOther = 0.05m,
                             RTGSToSame = 0.0m,
                             UpdatedBy = "admin",
-                            UpdatedOn = new DateTime(2021, 12, 22, 22, 31, 51, 746, DateTimeKind.Local).AddTicks(1922)
+                            UpdatedOn = new DateTime(2022, 1, 27, 10, 39, 47, 352, DateTimeKind.Local).AddTicks(8677)
                         });
                 });
 
@@ -147,6 +148,14 @@ namespace Technovert.BankApp.Services.Migrations
                     b.HasIndex("BankId");
 
                     b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "INR",
+                            ExchangeRate = 1m,
+                            Name = "Rupee"
+                        });
                 });
 
             modelBuilder.Entity("Technovert.BankApp.Models.Transaction", b =>

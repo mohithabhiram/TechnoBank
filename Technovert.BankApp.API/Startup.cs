@@ -16,8 +16,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.API.Profiles;
+using Technovert.BankApp.Models.Interfaces;
 using Technovert.BankApp.Services;
-using Technovert.BankApp.Services.Interfaces;
+
 
 namespace Technovert.BankApp.API
 {
@@ -44,9 +45,11 @@ namespace Technovert.BankApp.API
             services.AddDbContextPool<BankDbContext>(
       options => options.UseMySQL(Configuration.GetConnectionString("DefaultConnection")
    ));
-            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<IBankService, BankService>();
+            services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<IAccountService, AccountService>();
             services.AddScoped<ITransactionService, TransactionService>();
+            
 
 
 

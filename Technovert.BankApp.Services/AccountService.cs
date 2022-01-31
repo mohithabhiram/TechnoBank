@@ -5,21 +5,25 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.DTOs.Account;
 using Technovert.BankApp.Models.Enums;
 using Technovert.BankApp.Models.Exceptions;
-using Technovert.BankApp.Services.Interfaces;
+using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.Services
 {
     public class AccountService : IAccountService
     {
         private readonly BankDbContext _cxt;
+        private readonly IMapper _mapper;
        
-        public AccountService(BankDbContext bankDbContext)
+        public AccountService(BankDbContext bankDbContext, IMapper mapper)
         {
             _cxt = bankDbContext;
+            _mapper = mapper;
         }
       
         public string GenerateAccountId(string name)
@@ -33,12 +37,16 @@ namespace Technovert.BankApp.Services
         {
             
             return _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
+          
         }
 
       
 
-        public Account CreateAccount(Account account)
+        public Account CreateAccount(Account account, string bankId)
         {
+            account.Status = Models.Enums.Status.Active;
+            account.AccountId = GenerateAccountId(account.Name);
+            account.BankId = bankId;
             _cxt.Accounts.Add(account);
             _cxt.SaveChanges();
             var createdAccount = _cxt.Accounts.FirstOrDefault(a => a.AccountId == account.AccountId);
@@ -46,19 +54,31 @@ namespace Technovert.BankApp.Services
 
         }
 
-        public Account UpdateAccount(Account account)
+        public Account UpdateAccount(string bankId, string accountId, UpdateAccountDTO accountDTO)
         {
-            throw new NotImplementedException();
+            var acc = GetAccount(bankId, accountId);
+            acc.Name = accountDTO.Name;
+            acc.Password = accountDTO.Password;
+            acc.Gender = accountDTO.Gender;
+            acc.Status = accountDTO.Status;
+            _cxt.SaveChanges();
+            return acc;
         }
 
-        Account IAccountService.DeleteAccount(string bankId, string accountid)
+        Account IAccountService.DeleteAccount(string bankId, string accountId)
         {
-            throw new NotImplementedException();
+            var acc = _cxt.Accounts.FirstOrDefault(a => (a.AccountId == accountId) && (a.BankId == bankId));
+            _cxt.Accounts.Remove(acc);
+            _cxt.SaveChanges();
+            return acc;
         }
 
         public IEnumerable<Account> GetAllAccounts(string bankId)
         {
-            return _cxt.Accounts.Where(a => a.BankId == bankId).ToList();
+            IEnumerable<Account> acc = _cxt.Accounts.Where(a => a.BankId == bankId).ToList();
+            if (acc.LongCount() == 0)
+                return null;
+            return acc;
         }
 
         public void UpdateBalance(string bankId, string accountId, decimal balance)

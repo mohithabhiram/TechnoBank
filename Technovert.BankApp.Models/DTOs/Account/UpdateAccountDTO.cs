@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models.Enums;
 
-namespace Technovert.BankApp.API.DTOs.Account
+namespace Technovert.BankApp.Models.DTOs.Account
 {
     public class UpdateAccountDTO
     {

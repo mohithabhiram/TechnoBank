@@ -6,17 +6,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
 using Technovert.BankApp.Models.Exceptions;
-using Technovert.BankApp.Services.Interfaces;
+using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.Services
 {
     public class BankService : IBankService
     {
         private readonly BankDbContext _cxt;
-        //private DataStore dataStore;
-        public BankService(BankDbContext bankDbContext)
+        private readonly ICurrencyService _currencyService;
+        public BankService(BankDbContext bankDbContext, ICurrencyService currencyService)
         {
             _cxt = bankDbContext;
+            _currencyService = currencyService;
         }
         public string GenerateBankId(string name)
         {
@@ -62,6 +63,12 @@ namespace Technovert.BankApp.Services
 
         public Bank CreateBank(Bank bank)
         {
+            bank.BankId = GenerateBankId(bank.Name);
+            bank.DefaultCurrencyCode = _currencyService.GetCurrency("INR").Code;
+            bank.CreatedOn = DateTime.Now;
+            bank.CreatedBy = "Admin";
+            bank.UpdatedBy = bank.CreatedBy;
+            bank.UpdatedOn = DateTime.Now;
             _cxt.Banks.Add(bank);
             _cxt.SaveChanges();
             return bank;   
@@ -74,12 +81,18 @@ namespace Technovert.BankApp.Services
 
         public Bank DeleteBank(string bankId)
         {
-            throw new NotImplementedException();
+            Bank bank = _cxt.Banks.SingleOrDefault(b => (b.BankId == bankId));
+            _cxt.Banks.Remove(bank);
+            _cxt.SaveChanges();
+            return bank;
         }
 
         public IEnumerable<Bank> GetAllBanks()
         {
-            return _cxt.Banks.Include(b => b.Accounts).ToList();
+            return _cxt.Banks.Include(b => b.Accounts)
+                .Include(b => b.Currencies)
+                .Include(b => b.DefaultCurrency)
+                .ToList();
             
         }
     }

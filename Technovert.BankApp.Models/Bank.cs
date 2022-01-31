@@ -12,6 +12,7 @@ namespace Technovert.BankApp.Models
         [Key]
         public string BankId { get; set; }
         public string Name { get; set; }
+        public string DefaultCurrencyCode { get; set; }
         public Currency DefaultCurrency { get; set; }
         public decimal RTGSToSame { get; set; }
         public decimal RTGSToOther { get; set; }

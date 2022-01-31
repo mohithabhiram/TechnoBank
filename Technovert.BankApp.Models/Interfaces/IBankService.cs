@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
 
-namespace Technovert.BankApp.Services.Interfaces
+namespace Technovert.BankApp.Models.Interfaces
 {
     public interface IBankService
     {

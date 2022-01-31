@@ -40,12 +40,22 @@ namespace Technovert.BankApp.Services
                 .HasForeignKey(t => t.SourceAccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-          
+
             //dummy
+
+            Currency currency = new Currency
+            {
+                Name = "Rupee",
+                Code = "INR",
+                ExchangeRate = 1
+            };
+            modelBuilder.Entity<Currency>().HasData(currency);
+
             Bank b = new Bank
             {
                 BankId = "abc",
                 Name = "New Bank",
+                DefaultCurrencyCode = currency.Code,
                 CreatedBy = "admin",
                 UpdatedBy = "admin",
                 CreatedOn = DateTime.Now,
@@ -56,6 +66,8 @@ namespace Technovert.BankApp.Services
                 IMPSToSame = 0.03m
             };
             modelBuilder.Entity<Bank>().HasData(b);
+
+
             Account account1 = new Account
             {
                 AccountId = "abc",
@@ -63,7 +75,7 @@ namespace Technovert.BankApp.Services
                 BankId = b.BankId,
                 Balance = 20m,
                 Password = "1234",
-                Gender = Gender.Female,
+                Gender = Gender.Male,
                 Status = Status.Active,
                 Type = AccountType.User
             };

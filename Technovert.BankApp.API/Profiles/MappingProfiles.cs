@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Technovert.BankApp.API.DTOs.Account;
-using Technovert.BankApp.API.DTOs.Bank;
-using Technovert.BankApp.API.DTOs.Transaction;
+using Technovert.BankApp.Models.DTOs.Account;
+using Technovert.BankApp.Models.DTOs.Bank;
+using Technovert.BankApp.Models.DTOs.Transaction;
 using Technovert.BankApp.Models;
 
 namespace Technovert.BankApp.API.Profiles
@@ -17,6 +17,7 @@ namespace Technovert.BankApp.API.Profiles
             CreateMap<CreateBankDTO, Bank>();
             CreateMap<CreateAccountDTO, Account>();
             CreateMap<Account,AccountBalanceDTO>();
+            CreateMap<Account, UpdateAccountDTO>();
           
             CreateMap<Bank, GetBankDTO>();
             CreateMap<Account, GetAccountDTO>();
@@ -27,6 +28,7 @@ namespace Technovert.BankApp.API.Profiles
 
             CreateMap<Transaction, GetTransactionDTO>();
             CreateMap<CreateTransactionDTO, Transaction>();
+            CreateMap<Transaction, CreateTransactionDTO>();
 
 
         }

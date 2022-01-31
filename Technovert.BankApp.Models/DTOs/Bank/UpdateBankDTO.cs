@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
 
-namespace Technovert.BankApp.API.DTOs.Bank
+namespace Technovert.BankApp.Models.DTOs.Bank
 {
     public class UpdateBankDTO
     {

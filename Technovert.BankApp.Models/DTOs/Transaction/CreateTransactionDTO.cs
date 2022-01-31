@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models.Enums;
 
-namespace Technovert.BankApp.API.DTOs.Transaction
+namespace Technovert.BankApp.Models.DTOs.Transaction
 {
     public class CreateTransactionDTO
     {
