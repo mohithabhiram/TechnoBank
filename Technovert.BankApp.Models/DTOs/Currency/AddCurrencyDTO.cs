@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Technovert.BankApp.Models
+namespace Technovert.BankApp.Models.DTOs.Currency
 {
-    public class Currency
+    public class AddCurrencyDTO
     {
-        [Key]
         public string Code { get; set; }
         public string Name { get; set; }
         public decimal ExchangeRate { get; set; }
-
+        public string BankId { get; set; }
     }
 }

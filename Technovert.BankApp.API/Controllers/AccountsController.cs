@@ -12,7 +12,7 @@ using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountsController : ControllerBase
@@ -27,7 +27,7 @@ namespace Technovert.BankApp.API.Controllers
         }
 
 
-        //[Authorize(Roles ="BankStaff")]
+        [Authorize(Roles = "BankStaff")]
         [HttpGet("{bankId}")]
         public IActionResult Get(string bankId)
         {
@@ -35,13 +35,13 @@ namespace Technovert.BankApp.API.Controllers
             {
                 var allAcc = _accountService.GetAllAccounts(bankId);
                 if (allAcc == null)
-                    return NotFound();
+                    return NotFound("No accounts found");
                 var allDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(allAcc);
                 return Ok(allDTO);
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Internal Error");
             }
         }
 
@@ -51,12 +51,14 @@ namespace Technovert.BankApp.API.Controllers
             try
             {
                 var acc = _accountService.GetAccount(bankId, accountId);
+                if (acc == null)
+                    return NotFound("Account not found");
                 var accDTO = _mapper.Map<GetAccountDTO>(acc);
                 return Ok(accDTO);
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Internal Error");
             }
         }
 
@@ -66,7 +68,7 @@ namespace Technovert.BankApp.API.Controllers
             
             var acc = _accountService.GetAccount(bankId, id);
             if (_accountService.GetAccount(bankId, id) == null)
-                return BadRequest();
+                return NotFound("Account Not Found");
             var accDTO = _mapper.Map<AccountBalanceDTO>(acc);
             return Ok(accDTO);
         }
@@ -81,9 +83,9 @@ namespace Technovert.BankApp.API.Controllers
                 var createdAccount = _accountService.CreateAccount(account,bankId);
                 return Created(nameof(GetAccount),createdAccount);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return BadRequest(e);
             }
 
 

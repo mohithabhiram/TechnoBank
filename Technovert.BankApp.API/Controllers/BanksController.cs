@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Technovert.BankApp.Models.DTOs.Bank;
 using Technovert.BankApp.Models;
 using Technovert.BankApp.Models.Interfaces;
+using Technovert.BankApp.Models.DTOs.Currency;
 
 namespace Technovert.BankApp.API.Controllers
 {
@@ -51,7 +52,7 @@ namespace Technovert.BankApp.API.Controllers
         {
             var bank = _bankService.GetBank(bankId);
             if (bank == null)
-                return NotFound();
+                return NotFound("Bank Not Found");
             var bankDTO = _mapper.Map<GetBankDTO>(bank);
             return Ok(bankDTO);
 
@@ -68,11 +69,38 @@ namespace Technovert.BankApp.API.Controllers
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Internal Error");
             }
         }
 
-        [HttpDelete("{id}")]
+
+        [Authorize(Roles = "BankStaff")]
+        [HttpPost("addCurrency")]
+        public IActionResult AddCurrency([FromBody] Currency currency)
+        {
+            try
+            {
+                _bankService.AddCurrency(currency);
+                return Ok(currency);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+        }
+
+        [HttpGet("currencies")]
+        public IActionResult GetCurrencies()
+        {
+            var currencies = _currencyService.GetAllCurrencies();
+            if (currencies == null)
+                return NotFound();
+            return Ok(currencies);
+
+        }
+
+
+        [HttpDelete("{bankId}")]
         public IActionResult Delete(string bankId)
         {
             try

@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.DTOs.Currency;
 using Technovert.BankApp.Models.Exceptions;
 using Technovert.BankApp.Models.Interfaces;
 
@@ -12,12 +14,14 @@ namespace Technovert.BankApp.Services
 {
     public class BankService : IBankService
     {
+        private readonly IMapper _mapper;
         private readonly BankDbContext _cxt;
         private readonly ICurrencyService _currencyService;
-        public BankService(BankDbContext bankDbContext, ICurrencyService currencyService)
+        public BankService(BankDbContext bankDbContext, ICurrencyService currencyService,IMapper mapper)
         {
             _cxt = bankDbContext;
             _currencyService = currencyService;
+            _mapper = mapper;
         }
         public string GenerateBankId(string name)
         {
@@ -64,7 +68,8 @@ namespace Technovert.BankApp.Services
         public Bank CreateBank(Bank bank)
         {
             bank.BankId = GenerateBankId(bank.Name);
-            bank.DefaultCurrencyCode = _currencyService.GetCurrency("INR").Code;
+            bank.DefaultCurrencyCode = "INR";
+            bank.DefaultCurrency = _currencyService.GetCurrency("INR");
             bank.CreatedOn = DateTime.Now;
             bank.CreatedBy = "Admin";
             bank.UpdatedBy = bank.CreatedBy;
@@ -94,6 +99,12 @@ namespace Technovert.BankApp.Services
                 .Include(b => b.DefaultCurrency)
                 .ToList();
             
+        }
+
+        public void AddCurrency(Currency currency)
+        {
+            _cxt.Currencies.Add(currency);
+            _cxt.SaveChanges();
         }
     }
 }

@@ -40,9 +40,9 @@ namespace Technovert.BankApp.Services
                 .HasForeignKey(t => t.SourceAccountId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+           
 
             //dummy
-
             Currency currency = new Currency
             {
                 Name = "Rupee",

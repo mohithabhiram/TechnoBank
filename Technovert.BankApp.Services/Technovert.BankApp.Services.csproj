@@ -7,6 +7,22 @@
   <ItemGroup>
     <Compile Remove="Migrations\20211203051350_PrimaryKeyApplied.cs" />
     <Compile Remove="Migrations\20211203051350_PrimaryKeyApplied.Designer.cs" />
+    <Compile Remove="Migrations\20220131124953_newMigration.cs" />
+    <Compile Remove="Migrations\20220131124953_newMigration.Designer.cs" />
+    <Compile Remove="Migrations\20220131125301_newDBMigration.cs" />
+    <Compile Remove="Migrations\20220131125301_newDBMigration.Designer.cs" />
+    <Compile Remove="Migrations\20220131132656_new.cs" />
+    <Compile Remove="Migrations\20220131132656_new.Designer.cs" />
+    <Compile Remove="Migrations\20220131133015_accModified.cs" />
+    <Compile Remove="Migrations\20220131133015_accModified.Designer.cs" />
+    <Compile Remove="Migrations\20220131133852_new.cs" />
+    <Compile Remove="Migrations\20220131133852_new.Designer.cs" />
+    <Compile Remove="Migrations\20220131134123_new.cs" />
+    <Compile Remove="Migrations\20220131134123_new.Designer.cs" />
+    <Compile Remove="Migrations\20220131134351_new.cs" />
+    <Compile Remove="Migrations\20220131134351_new.Designer.cs" />
+    <Compile Remove="Migrations\20220131155121_newMig.cs" />
+    <Compile Remove="Migrations\20220131155121_newMig.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

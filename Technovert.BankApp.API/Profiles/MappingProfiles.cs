@@ -7,6 +7,7 @@ using Technovert.BankApp.Models.DTOs.Account;
 using Technovert.BankApp.Models.DTOs.Bank;
 using Technovert.BankApp.Models.DTOs.Transaction;
 using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.DTOs.Currency;
 
 namespace Technovert.BankApp.API.Profiles
 {
@@ -29,6 +30,9 @@ namespace Technovert.BankApp.API.Profiles
             CreateMap<Transaction, GetTransactionDTO>();
             CreateMap<CreateTransactionDTO, Transaction>();
             CreateMap<Transaction, CreateTransactionDTO>();
+
+            CreateMap<AddCurrencyDTO, Currency>();
+            CreateMap<Currency, AddCurrencyDTO>();
 
 
         }

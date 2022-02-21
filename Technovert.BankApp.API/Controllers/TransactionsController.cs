@@ -38,7 +38,7 @@ namespace Technovert.BankApp.API.Controllers
             var transaction = _transactionService.GetTransaction(transactionId);
             if(transaction == null)
             {
-                return NotFound();
+                return NotFound("Invalid Transaction Id");
             }
             var transactionDTO = _mapper.Map<GetTransactionDTO>(transaction);
             return Ok(transactionDTO);

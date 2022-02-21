@@ -24,7 +24,7 @@ namespace Technovert.BankApp.Models
         [Required]
         public Gender Gender { get; set; }
         public decimal Balance { get; set; }
-        public Currency Currency { get; set; }
+        //public Currency Currency { get; set; }
         public AccountType Type { get; set; }
         public Status Status { get; set; }
         public ICollection<Transaction> Transactions { get; set; }

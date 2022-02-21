@@ -20,13 +20,15 @@ namespace Technovert.BankApp.Services
 
         private readonly IBankService _bankService;
         private readonly IAccountService _accountService;
+        private readonly ICurrencyService _currencyService;
 
-        public TransactionService(BankDbContext bankDbContext,IMapper mapper, IBankService bankService, IAccountService accountService)
+        public TransactionService(BankDbContext bankDbContext,IMapper mapper, IBankService bankService, IAccountService accountService, ICurrencyService currencyService)
         {
             _cxt = bankDbContext;
             _mapper = mapper;
             _bankService = bankService;
             _accountService = accountService;
+            _currencyService = currencyService;
         }
 
         public Transaction CreateTransaction(string bankId, string accountId, CreateTransactionDTO nT)
@@ -83,9 +85,17 @@ namespace Technovert.BankApp.Services
             return ("TXN" + sourceBankId + sourceAccountId + timestamp);
         }
 
+        public decimal ConvertToDefaultCurrency(string code, decimal amount)
+        {
+            var currency = _currencyService.GetCurrency(code);
+            return amount * currency.ExchangeRate;
+        }
+
         public CreateTransactionDTO UpdateBalance(string bankId, string accountId, CreateTransactionDTO newTransaction)
         {
             decimal rateOfCharges = 0m;
+            if (newTransaction.Type == TransactionType.Deposit && newTransaction.CurrencyCode != "INR")
+                newTransaction.Amount = ConvertToDefaultCurrency(newTransaction.CurrencyCode, newTransaction.Amount);
             if (newTransaction.TransactionMode == TransactionMode.RTGS)
             {
                 if (bankId == newTransaction.DestinationBankId)
@@ -116,7 +126,7 @@ namespace Technovert.BankApp.Services
             decimal totalCharges = newTransaction.Amount * rateOfCharges;
             decimal accBal = _accountService.GetAccount(bankId, accountId).Balance;
             //withdraw
-            if (newTransaction.Type == TransactionType.Withdraw && accBal>newTransaction.Amount)
+            if (newTransaction.Type == TransactionType.Withdraw && accBal>newTransaction.Amount && newTransaction.CurrencyCode == "INR")
             {
                 _accountService.UpdateBalance(bankId, accountId, accBal - newTransaction.Amount);
             }
@@ -127,7 +137,7 @@ namespace Technovert.BankApp.Services
                 _accountService.UpdateBalance(newTransaction.DestinationBankId, newTransaction.DestinationAccountId, _accountService.GetAccount(newTransaction.DestinationBankId, newTransaction.DestinationAccountId).Balance + newTransaction.Amount);
             }
             //transfer
-            else if (newTransaction.Type == TransactionType.Transfer && accBal>newTransaction.Amount)
+            else if (newTransaction.Type == TransactionType.Transfer && accBal>newTransaction.Amount && newTransaction.CurrencyCode == "INR")
             {
                 _accountService.UpdateBalance(bankId, accountId, accBal - (newTransaction.Amount + totalCharges));
                 _accountService.UpdateBalance(newTransaction.DestinationBankId, newTransaction.DestinationAccountId, _accountService.GetAccount(newTransaction.DestinationBankId, newTransaction.DestinationAccountId).Balance + newTransaction.Amount);

@@ -29,9 +29,6 @@ namespace Technovert.BankApp.Services.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(767)");
 
-                    b.Property<string>("CurrencyCode")
-                        .HasColumnType("varchar(767)");
-
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
@@ -52,8 +49,6 @@ namespace Technovert.BankApp.Services.Migrations
                     b.HasKey("AccountId");
 
                     b.HasIndex("BankId");
-
-                    b.HasIndex("CurrencyCode");
 
                     b.ToTable("Accounts");
 
@@ -117,7 +112,7 @@ namespace Technovert.BankApp.Services.Migrations
                         {
                             BankId = "abc",
                             CreatedBy = "admin",
-                            CreatedOn = new DateTime(2022, 1, 27, 10, 39, 47, 352, DateTimeKind.Local).AddTicks(926),
+                            CreatedOn = new DateTime(2022, 2, 1, 8, 55, 47, 531, DateTimeKind.Local).AddTicks(6284),
                             DefaultCurrencyCode = "INR",
                             IMPSToOther = 0.07m,
                             IMPSToSame = 0.03m,
@@ -125,7 +120,7 @@ namespace Technovert.BankApp.Services.Migrations
                             RTGSToOther = 0.05m,
                             RTGSToSame = 0.0m,
                             UpdatedBy = "admin",
-                            UpdatedOn = new DateTime(2022, 1, 27, 10, 39, 47, 352, DateTimeKind.Local).AddTicks(8677)
+                            UpdatedOn = new DateTime(2022, 2, 1, 8, 55, 47, 532, DateTimeKind.Local).AddTicks(4213)
                         });
                 });
 
@@ -208,10 +203,6 @@ namespace Technovert.BankApp.Services.Migrations
                         .HasForeignKey("BankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Technovert.BankApp.Models.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyCode");
                 });
 
             modelBuilder.Entity("Technovert.BankApp.Models.Bank", b =>

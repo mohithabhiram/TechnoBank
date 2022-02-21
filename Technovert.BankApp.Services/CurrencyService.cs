@@ -16,6 +16,13 @@ namespace Technovert.BankApp.Services
         {
             _cxt = appDbContext;
         }
+
+        public IEnumerable<Currency> GetAllCurrencies()
+        {
+            return _cxt.Currencies.ToList();
+           
+        }
+
         public Currency GetCurrency(string code)
         {
             return _cxt.Currencies.FirstOrDefault(c => c.Code == code);

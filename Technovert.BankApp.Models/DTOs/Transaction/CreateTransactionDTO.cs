@@ -15,6 +15,7 @@ namespace Technovert.BankApp.Models.DTOs.Transaction
         public string DestinationBankId { get; set; }
         [Required]
         public decimal Amount { get; set; }
+        public string CurrencyCode { get; set; }
         [Required]
         public TransactionMode TransactionMode { get; set; }
         [Required]
