@@ -54,16 +54,16 @@ namespace Technovert.BankApp.API.Controllers
         }
 
         [HttpPost("{bankId}/{accountId}")]
-        public IActionResult Post(string bankId, string accountId, [FromBody] CreateTransactionDTO newTransaction)
+        public IActionResult Post(string bankId, string accountId, [FromBody] CreateTransactionDTO newTransactionDTO)
         {
-            var nT = _transactionService.UpdateBalance(bankId, accountId, newTransaction);
-            if(nT == null)
+            var newTransaction = _transactionService.UpdateBalance(bankId, accountId, newTransactionDTO);
+            if(newTransaction == null)
             {
                 return BadRequest("Invalid Transaction");
             }
-            var t =_transactionService.CreateTransaction(bankId,accountId,nT);
-            var getTDto = _mapper.Map<GetTransactionDTO>(t);
-            return Ok(getTDto);
+            var transaction =_transactionService.CreateTransaction(bankId,accountId,newTransaction);
+            var getTransactionDto = _mapper.Map<GetTransactionDTO>(transaction);
+            return Ok(getTransactionDto);
         }
 
     }

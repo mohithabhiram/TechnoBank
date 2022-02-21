@@ -34,14 +34,14 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
-                var all = _bankService.GetAllBanks();
-                var allDTO = _mapper.Map<IEnumerable<GetBankDTO>>(all);
-                return Ok(allDTO);
+                var allBanks = _bankService.GetAllBanks();
+                var allBanksDTO = _mapper.Map<IEnumerable<GetBankDTO>>(allBanks);
+                return Ok(allBanksDTO);
             }
             catch (Exception)
             {
 
-                return BadRequest();
+                return BadRequest("Access Denied");
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Technovert.BankApp.Models.DTOs.Transaction
         public string DestinationBankId { get; set; }
         [Required]
         public decimal Amount { get; set; }
+        [Required(AllowEmptyStrings = true)]
         public string CurrencyCode { get; set; }
         [Required]
         public TransactionMode TransactionMode { get; set; }

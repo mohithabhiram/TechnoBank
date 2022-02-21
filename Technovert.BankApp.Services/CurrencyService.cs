@@ -10,22 +10,22 @@ namespace Technovert.BankApp.Services
 {
     public class CurrencyService : ICurrencyService
     {
-        private readonly BankDbContext _cxt;
+        private readonly BankDbContext _ctx;
 
         public CurrencyService(BankDbContext appDbContext)
         {
-            _cxt = appDbContext;
+            _ctx = appDbContext;
         }
 
         public IEnumerable<Currency> GetAllCurrencies()
         {
-            return _cxt.Currencies.ToList();
+            return _ctx.Currencies.ToList();
            
         }
 
         public Currency GetCurrency(string code)
         {
-            return _cxt.Currencies.FirstOrDefault(c => c.Code == code);
+            return _ctx.Currencies.FirstOrDefault(c => c.Code == code);
         }
     }
 }

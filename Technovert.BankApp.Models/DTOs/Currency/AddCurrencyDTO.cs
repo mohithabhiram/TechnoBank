@@ -10,7 +10,7 @@ namespace Technovert.BankApp.Models.DTOs.Currency
     {
         public string Code { get; set; }
         public string Name { get; set; }
-        public decimal ExchangeRate { get; set; }
+        public decimal ExchangeRateWRTDefaultCurrency { get; set; }
         public string BankId { get; set; }
     }
 }

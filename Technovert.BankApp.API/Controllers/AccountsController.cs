@@ -33,11 +33,11 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
-                var allAcc = _accountService.GetAllAccounts(bankId);
-                if (allAcc == null)
+                var allAccounts = _accountService.GetAllAccounts(bankId);
+                if (allAccounts == null)
                     return NotFound("No accounts found");
-                var allDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(allAcc);
-                return Ok(allDTO);
+                var allAccountsDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(allAccounts);
+                return Ok(allAccountsDTO);
             }
             catch (Exception)
             {
@@ -50,11 +50,11 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
-                var acc = _accountService.GetAccount(bankId, accountId);
-                if (acc == null)
+                var account = _accountService.GetAccount(bankId, accountId);
+                if (account == null)
                     return NotFound("Account not found");
-                var accDTO = _mapper.Map<GetAccountDTO>(acc);
-                return Ok(accDTO);
+                var accountDTO = _mapper.Map<GetAccountDTO>(account);
+                return Ok(accountDTO);
             }
             catch (Exception)
             {
@@ -66,11 +66,11 @@ namespace Technovert.BankApp.API.Controllers
         public IActionResult GetBalance(string bankId, string id)
         {
             
-            var acc = _accountService.GetAccount(bankId, id);
+            var account = _accountService.GetAccount(bankId, id);
             if (_accountService.GetAccount(bankId, id) == null)
                 return NotFound("Account Not Found");
-            var accDTO = _mapper.Map<AccountBalanceDTO>(acc);
-            return Ok(accDTO);
+            var accountDTO = _mapper.Map<AccountBalanceDTO>(account);
+            return Ok(accountDTO);
         }
 
         [HttpPost("{bankId}")]
@@ -94,9 +94,9 @@ namespace Technovert.BankApp.API.Controllers
         [HttpPut("{accountId}")]
         public IActionResult UpdateAccount(string bankId, string accountId, [FromBody] UpdateAccountDTO accountDTO)
         {
-            var updatedAcc = _accountService.UpdateAccount(bankId,accountId,accountDTO);
-            var updatedAccDTO = _mapper.Map<UpdateAccountDTO>(updatedAcc);
-            return Ok(updatedAccDTO);
+            var updatedAccount = _accountService.UpdateAccount(bankId,accountId,accountDTO);
+            var updatedAccountDTO = _mapper.Map<UpdateAccountDTO>(updatedAccount);
+            return Ok(updatedAccountDTO);
         }
 
 

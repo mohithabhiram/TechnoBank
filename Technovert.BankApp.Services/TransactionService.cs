@@ -15,7 +15,7 @@ namespace Technovert.BankApp.Services
 {
     public class TransactionService : ITransactionService
     {
-        private readonly BankDbContext _cxt;
+        private readonly BankDbContext _ctx;
         private readonly IMapper _mapper;
 
         private readonly IBankService _bankService;
@@ -24,7 +24,7 @@ namespace Technovert.BankApp.Services
 
         public TransactionService(BankDbContext bankDbContext,IMapper mapper, IBankService bankService, IAccountService accountService, ICurrencyService currencyService)
         {
-            _cxt = bankDbContext;
+            _ctx = bankDbContext;
             _mapper = mapper;
             _bankService = bankService;
             _accountService = accountService;
@@ -42,9 +42,9 @@ namespace Technovert.BankApp.Services
             t.TransactionMode = nT.TransactionMode;
             t.On = DateTime.Now;
 
-            _cxt.Transactions.Add(t);
-            _cxt.SaveChanges();
-            return _cxt.Transactions.FirstOrDefault(tr => tr.TransactionId == t.TransactionId);
+            _ctx.Transactions.Add(t);
+            _ctx.SaveChanges();
+            return _ctx.Transactions.FirstOrDefault(tr => tr.TransactionId == t.TransactionId);
         }
 
         public Transaction DeleteTransaction(Transaction transaction)
@@ -54,7 +54,7 @@ namespace Technovert.BankApp.Services
 
         public IEnumerable<Transaction> GetAllTransactions()
         {
-            return _cxt.Transactions
+            return _ctx.Transactions
                 .Include(t => t.SourceAccount)
                 .Include(t => t.DestinationAccount)
                 .ToList();
@@ -62,7 +62,7 @@ namespace Technovert.BankApp.Services
 
         public Transaction GetTransaction(string transactionId)
         {
-            var transaction = _cxt.Transactions.FirstOrDefault(t => t.TransactionId == transactionId);
+            var transaction = _ctx.Transactions.FirstOrDefault(t => t.TransactionId == transactionId);
             return transaction;
         }
 
@@ -88,13 +88,15 @@ namespace Technovert.BankApp.Services
         public decimal ConvertToDefaultCurrency(string code, decimal amount)
         {
             var currency = _currencyService.GetCurrency(code);
-            return amount * currency.ExchangeRate;
+            return amount * currency.ExchangeRateWRTDefaultCurrency;
         }
 
         public CreateTransactionDTO UpdateBalance(string bankId, string accountId, CreateTransactionDTO newTransaction)
         {
             decimal rateOfCharges = 0m;
-            if (newTransaction.Type == TransactionType.Deposit && newTransaction.CurrencyCode != "INR")
+            if (newTransaction.CurrencyCode == "")
+                newTransaction.CurrencyCode = BankConstants.DefaultCurrencyCode;
+            if (newTransaction.Type == TransactionType.Deposit && newTransaction.CurrencyCode != BankConstants.DefaultCurrencyCode)
                 newTransaction.Amount = ConvertToDefaultCurrency(newTransaction.CurrencyCode, newTransaction.Amount);
             if (newTransaction.TransactionMode == TransactionMode.RTGS)
             {
@@ -126,7 +128,7 @@ namespace Technovert.BankApp.Services
             decimal totalCharges = newTransaction.Amount * rateOfCharges;
             decimal accBal = _accountService.GetAccount(bankId, accountId).Balance;
             //withdraw
-            if (newTransaction.Type == TransactionType.Withdraw && accBal>newTransaction.Amount && newTransaction.CurrencyCode == "INR")
+            if (newTransaction.Type == TransactionType.Withdraw && accBal>newTransaction.Amount && newTransaction.CurrencyCode == BankConstants.DefaultCurrencyCode)
             {
                 _accountService.UpdateBalance(bankId, accountId, accBal - newTransaction.Amount);
             }
@@ -137,7 +139,7 @@ namespace Technovert.BankApp.Services
                 _accountService.UpdateBalance(newTransaction.DestinationBankId, newTransaction.DestinationAccountId, _accountService.GetAccount(newTransaction.DestinationBankId, newTransaction.DestinationAccountId).Balance + newTransaction.Amount);
             }
             //transfer
-            else if (newTransaction.Type == TransactionType.Transfer && accBal>newTransaction.Amount && newTransaction.CurrencyCode == "INR")
+            else if (newTransaction.Type == TransactionType.Transfer && accBal>newTransaction.Amount && newTransaction.CurrencyCode == BankConstants.DefaultCurrencyCode)
             {
                 _accountService.UpdateBalance(bankId, accountId, accBal - (newTransaction.Amount + totalCharges));
                 _accountService.UpdateBalance(newTransaction.DestinationBankId, newTransaction.DestinationAccountId, _accountService.GetAccount(newTransaction.DestinationBankId, newTransaction.DestinationAccountId).Balance + newTransaction.Amount);

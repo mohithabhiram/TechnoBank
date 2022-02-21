@@ -15,11 +15,11 @@ namespace Technovert.BankApp.Services
     public class BankService : IBankService
     {
         private readonly IMapper _mapper;
-        private readonly BankDbContext _cxt;
+        private readonly BankDbContext _ctx;
         private readonly ICurrencyService _currencyService;
         public BankService(BankDbContext bankDbContext, ICurrencyService currencyService,IMapper mapper)
         {
-            _cxt = bankDbContext;
+            _ctx = bankDbContext;
             _currencyService = currencyService;
             _mapper = mapper;
         }
@@ -32,7 +32,7 @@ namespace Technovert.BankApp.Services
 
         public Bank GetBank(string bankId)
         {
-            Bank bank = _cxt.Banks.SingleOrDefault(b => (b.BankId == bankId));
+            Bank bank = _ctx.Banks.SingleOrDefault(b => (b.BankId == bankId));
             return bank;
         }
         public void UpdateServiceChargesForSameBank(decimal RTGS, decimal IMPS, string bankId)
@@ -74,8 +74,8 @@ namespace Technovert.BankApp.Services
             bank.CreatedBy = "Admin";
             bank.UpdatedBy = bank.CreatedBy;
             bank.UpdatedOn = DateTime.Now;
-            _cxt.Banks.Add(bank);
-            _cxt.SaveChanges();
+            _ctx.Banks.Add(bank);
+            _ctx.SaveChanges();
             return bank;   
         }
 
@@ -86,15 +86,15 @@ namespace Technovert.BankApp.Services
 
         public Bank DeleteBank(string bankId)
         {
-            Bank bank = _cxt.Banks.SingleOrDefault(b => (b.BankId == bankId));
-            _cxt.Banks.Remove(bank);
-            _cxt.SaveChanges();
+            Bank bank = _ctx.Banks.SingleOrDefault(b => (b.BankId == bankId));
+            _ctx.Banks.Remove(bank);
+            _ctx.SaveChanges();
             return bank;
         }
 
         public IEnumerable<Bank> GetAllBanks()
         {
-            return _cxt.Banks.Include(b => b.Accounts)
+            return _ctx.Banks.Include(b => b.Accounts)
                 .Include(b => b.Currencies)
                 .Include(b => b.DefaultCurrency)
                 .ToList();
@@ -103,8 +103,8 @@ namespace Technovert.BankApp.Services
 
         public void AddCurrency(Currency currency)
         {
-            _cxt.Currencies.Add(currency);
-            _cxt.SaveChanges();
+            _ctx.Currencies.Add(currency);
+            _ctx.SaveChanges();
         }
     }
 }

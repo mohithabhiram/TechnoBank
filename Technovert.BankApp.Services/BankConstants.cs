@@ -9,5 +9,6 @@ namespace Technovert.BankApp.Services
     public class BankConstants
     {
         public const string StaffName = "ADMIN";
+        public const string DefaultCurrencyCode = "INR";
     }
 }

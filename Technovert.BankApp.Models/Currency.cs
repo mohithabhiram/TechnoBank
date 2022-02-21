@@ -13,7 +13,7 @@ namespace Technovert.BankApp.Models
         [Key]
         public string Code { get; set; }
         public string Name { get; set; }
-        public decimal ExchangeRate { get; set; }
+        public decimal ExchangeRateWRTDefaultCurrency { get; set; }
 
     }
 }

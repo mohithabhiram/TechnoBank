@@ -47,7 +47,7 @@ namespace Technovert.BankApp.Services
             {
                 Name = "Rupee",
                 Code = "INR",
-                ExchangeRate = 1
+                ExchangeRateWRTDefaultCurrency = 1
             };
             modelBuilder.Entity<Currency>().HasData(currency);
 
