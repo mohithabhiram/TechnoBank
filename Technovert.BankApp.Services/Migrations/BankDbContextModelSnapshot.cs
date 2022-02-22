@@ -29,9 +29,6 @@ namespace Technovert.BankApp.Services.Migrations
                         .IsRequired()
                         .HasColumnType("varchar(767)");
 
-                    b.Property<string>("CurrencyCode")
-                        .HasColumnType("varchar(767)");
-
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
@@ -53,8 +50,6 @@ namespace Technovert.BankApp.Services.Migrations
 
                     b.HasIndex("BankId");
 
-                    b.HasIndex("CurrencyCode");
-
                     b.ToTable("Accounts");
 
                     b.HasData(
@@ -63,7 +58,7 @@ namespace Technovert.BankApp.Services.Migrations
                             AccountId = "abc",
                             Balance = 20m,
                             BankId = "abc",
-                            Gender = 2,
+                            Gender = 1,
                             Name = "John Doe",
                             Password = "1234",
                             Status = 1,
@@ -117,14 +112,15 @@ namespace Technovert.BankApp.Services.Migrations
                         {
                             BankId = "abc",
                             CreatedBy = "admin",
-                            CreatedOn = new DateTime(2021, 12, 22, 22, 31, 51, 745, DateTimeKind.Local).AddTicks(3493),
+                            CreatedOn = new DateTime(2022, 2, 1, 8, 55, 47, 531, DateTimeKind.Local).AddTicks(6284),
+                            DefaultCurrencyCode = "INR",
                             IMPSToOther = 0.07m,
                             IMPSToSame = 0.03m,
                             Name = "New Bank",
                             RTGSToOther = 0.05m,
                             RTGSToSame = 0.0m,
                             UpdatedBy = "admin",
-                            UpdatedOn = new DateTime(2021, 12, 22, 22, 31, 51, 746, DateTimeKind.Local).AddTicks(1922)
+                            UpdatedOn = new DateTime(2022, 2, 1, 8, 55, 47, 532, DateTimeKind.Local).AddTicks(4213)
                         });
                 });
 
@@ -147,6 +143,14 @@ namespace Technovert.BankApp.Services.Migrations
                     b.HasIndex("BankId");
 
                     b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Code = "INR",
+                            ExchangeRate = 1m,
+                            Name = "Rupee"
+                        });
                 });
 
             modelBuilder.Entity("Technovert.BankApp.Models.Transaction", b =>
@@ -199,10 +203,6 @@ namespace Technovert.BankApp.Services.Migrations
                         .HasForeignKey("BankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Technovert.BankApp.Models.Currency", "Currency")
-                        .WithMany()
-                        .HasForeignKey("CurrencyCode");
                 });
 
             modelBuilder.Entity("Technovert.BankApp.Models.Bank", b =>

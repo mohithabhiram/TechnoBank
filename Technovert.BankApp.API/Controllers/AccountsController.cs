@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Technovert.BankApp.API.DTOs.Account;
+using Technovert.BankApp.Models.DTOs.Account;
 using Technovert.BankApp.Models;
-using Technovert.BankApp.Services.Interfaces;
+using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.API.Controllers
 {
@@ -27,20 +27,21 @@ namespace Technovert.BankApp.API.Controllers
         }
 
 
-        [Authorize(Roles ="BankStaff")]
+        [Authorize(Roles = "BankStaff")]
         [HttpGet("{bankId}")]
         public IActionResult Get(string bankId)
         {
             try
             {
-                var all = _accountService.GetAllAccounts(bankId);
-                var allDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(all);
-                return Ok(allDTO);
+                var allAccounts = _accountService.GetAllAccounts(bankId);
+                if (allAccounts == null)
+                    return NotFound("No accounts found");
+                var allAccountsDTO = _mapper.Map<IEnumerable<GetAccountDTO>>(allAccounts);
+                return Ok(allAccountsDTO);
             }
             catch (Exception)
             {
-
-                return BadRequest();
+                return BadRequest("Internal Error");
             }
         }
 
@@ -49,13 +50,15 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
-                var acc = _accountService.GetAccount(bankId, accountId);
-                var accDTO = _mapper.Map<GetAccountDTO>(acc);
-                return Ok(accDTO);
+                var account = _accountService.GetAccount(bankId, accountId);
+                if (account == null)
+                    return NotFound("Account not found");
+                var accountDTO = _mapper.Map<GetAccountDTO>(account);
+                return Ok(accountDTO);
             }
             catch (Exception)
             {
-                return BadRequest();
+                return BadRequest("Internal Error");
             }
         }
 
@@ -63,11 +66,11 @@ namespace Technovert.BankApp.API.Controllers
         public IActionResult GetBalance(string bankId, string id)
         {
             
-            var acc = _accountService.GetAccount(bankId, id);
+            var account = _accountService.GetAccount(bankId, id);
             if (_accountService.GetAccount(bankId, id) == null)
-                return BadRequest();
-            var accDTO = _mapper.Map<AccountBalanceDTO>(acc);
-            return Ok(accDTO);
+                return NotFound("Account Not Found");
+            var accountDTO = _mapper.Map<AccountBalanceDTO>(account);
+            return Ok(accountDTO);
         }
 
         [HttpPost("{bankId}")]
@@ -75,20 +78,40 @@ namespace Technovert.BankApp.API.Controllers
         {
             try
             {
+
                 var account = _mapper.Map<Account>(accountDTO);
-                account.Status = Models.Enums.Status.Active;
-                account.AccountId = _accountService.GenerateAccountId(account.Name);
-                account.BankId = bankId;
-                var createdAccount = _accountService.CreateAccount(account);
+                var createdAccount = _accountService.CreateAccount(account,bankId);
                 return Created(nameof(GetAccount),createdAccount);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e);
+            }
+
+
+        }
+
+        [HttpPut("{accountId}")]
+        public IActionResult UpdateAccount(string bankId, string accountId, [FromBody] UpdateAccountDTO accountDTO)
+        {
+            var updatedAccount = _accountService.UpdateAccount(bankId,accountId,accountDTO);
+            var updatedAccountDTO = _mapper.Map<UpdateAccountDTO>(updatedAccount);
+            return Ok(updatedAccountDTO);
+        }
+
+
+        [HttpDelete("{bankId}/{accountId}")]
+        public IActionResult Delete(string bankId, string accountId)
+        {
+            try
+            {
+                var deletedAccount = _accountService.DeleteAccount(bankId,accountId);
+                return Ok(deletedAccount);
             }
             catch (Exception)
             {
-
                 return BadRequest();
             }
-
-
         }
 
         [AllowAnonymous]

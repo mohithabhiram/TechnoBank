@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Technovert.BankApp.API.DTOs.Bank
+namespace Technovert.BankApp.Models.DTOs.Bank
 {
     public class CreateBankDTO
     {

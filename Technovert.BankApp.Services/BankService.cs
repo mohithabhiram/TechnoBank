@@ -1,22 +1,27 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Technovert.BankApp.Models;
+using Technovert.BankApp.Models.DTOs.Currency;
 using Technovert.BankApp.Models.Exceptions;
-using Technovert.BankApp.Services.Interfaces;
+using Technovert.BankApp.Models.Interfaces;
 
 namespace Technovert.BankApp.Services
 {
     public class BankService : IBankService
     {
-        private readonly BankDbContext _cxt;
-        //private DataStore dataStore;
-        public BankService(BankDbContext bankDbContext)
+        private readonly IMapper _mapper;
+        private readonly BankDbContext _ctx;
+        private readonly ICurrencyService _currencyService;
+        public BankService(BankDbContext bankDbContext, ICurrencyService currencyService,IMapper mapper)
         {
-            _cxt = bankDbContext;
+            _ctx = bankDbContext;
+            _currencyService = currencyService;
+            _mapper = mapper;
         }
         public string GenerateBankId(string name)
         {
@@ -27,7 +32,7 @@ namespace Technovert.BankApp.Services
 
         public Bank GetBank(string bankId)
         {
-            Bank bank = _cxt.Banks.SingleOrDefault(b => (b.BankId == bankId));
+            Bank bank = _ctx.Banks.SingleOrDefault(b => (b.BankId == bankId));
             return bank;
         }
         public void UpdateServiceChargesForSameBank(decimal RTGS, decimal IMPS, string bankId)
@@ -62,8 +67,15 @@ namespace Technovert.BankApp.Services
 
         public Bank CreateBank(Bank bank)
         {
-            _cxt.Banks.Add(bank);
-            _cxt.SaveChanges();
+            bank.BankId = GenerateBankId(bank.Name);
+            bank.DefaultCurrencyCode = "INR";
+            bank.DefaultCurrency = _currencyService.GetCurrency("INR");
+            bank.CreatedOn = DateTime.Now;
+            bank.CreatedBy = "Admin";
+            bank.UpdatedBy = bank.CreatedBy;
+            bank.UpdatedOn = DateTime.Now;
+            _ctx.Banks.Add(bank);
+            _ctx.SaveChanges();
             return bank;   
         }
 
@@ -74,13 +86,25 @@ namespace Technovert.BankApp.Services
 
         public Bank DeleteBank(string bankId)
         {
-            throw new NotImplementedException();
+            Bank bank = _ctx.Banks.SingleOrDefault(b => (b.BankId == bankId));
+            _ctx.Banks.Remove(bank);
+            _ctx.SaveChanges();
+            return bank;
         }
 
         public IEnumerable<Bank> GetAllBanks()
         {
-            return _cxt.Banks.Include(b => b.Accounts).ToList();
+            return _ctx.Banks.Include(b => b.Accounts)
+                .Include(b => b.Currencies)
+                .Include(b => b.DefaultCurrency)
+                .ToList();
             
+        }
+
+        public void AddCurrency(Currency currency)
+        {
+            _ctx.Currencies.Add(currency);
+            _ctx.SaveChanges();
         }
     }
 }
